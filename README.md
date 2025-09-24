@@ -1,0 +1,3 @@
+# RaagRiff
+
+This is a music streaming/playlists web app (a Spotify clone)! Work in progress...
