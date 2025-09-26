@@ -6,7 +6,7 @@
 "use strict";
 
 const BASE_URL = "https://api.spotify.com/v1";
-const AUTH_TOKEN_BASE_URL = "https://accounts.spotify.com/api/token";
+const TOKEN_API_BASE_URL = "https://accounts.spotify.com/api";
 const CLIENT_ID = process.env.SPOTIFY_DEV_CLIENT_ID;
 const CLIENT_SECRET = process.env.SPOTIFY_DEV_CLIENT_SECRET;
 const REDIRECT_URI = process.env.SPOTIFY_DEV_REDIRECT_URI;
@@ -18,7 +18,7 @@ const DEFAULT_LIMIT = 28;
 
 module.exports = {
   BASE_URL,
-  AUTH_TOKEN_BASE_URL,
+  TOKEN_API_BASE_URL,
   CLIENT_ID,
   CLIENT_SECRET,
   REDIRECT_URI,

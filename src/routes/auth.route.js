@@ -6,8 +6,12 @@
 "use strict";
 
 const router = require("express").Router();
-const { handleAuth } = require("../controllers/auth.controller");
+const {
+  handleAuth,
+  handleCallback,
+} = require("../controllers/auth.controller");
 
 router.get("/", handleAuth);
+router.get("/callback", handleCallback);
 
 module.exports = router;
