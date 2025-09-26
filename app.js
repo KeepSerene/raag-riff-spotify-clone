@@ -7,7 +7,8 @@
 
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const { login } = require("./src/controllers/login.controller");
+const loginRouter = require("./src/routes/login.route");
+const authRouter = require("./src/routes/auth.route");
 const express = require("express");
 
 const app = express();
@@ -25,8 +26,9 @@ app.use(cors()).use(cookieParser());
 app.set("view engine", "ejs");
 
 /**
- * Login page
+ * Routes setup
  */
-app.get("/login", login);
+app.use("/login", loginRouter);
+app.use("/auth", authRouter);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

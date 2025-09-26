@@ -6,8 +6,8 @@
 "use strict";
 
 const router = require("express").Router();
-const { handleLogin } = require("../controllers/login.controller");
+const { handleAuth } = require("../controllers/auth.controller");
 
-router.get("/", handleLogin);
+router.get("/", handleAuth);
 
 module.exports = router;

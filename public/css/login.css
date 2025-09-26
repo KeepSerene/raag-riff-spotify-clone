@@ -1,0 +1,145 @@
+@import url("./base.css");
+
+.login-page {
+  height: 100%;
+  padding: var(--space-2);
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+}
+
+:where(.banner, .content) {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-extra-large);
+  overflow: hidden;
+}
+
+.cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content {
+  background-image: url("/images/login-bg-pattern.png");
+  background-repeat: no-repeat;
+  background-size: 200%;
+  background-position: center;
+  text-align: center;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  --state-layer-bg: var(--on-primary);
+
+  max-width: max-content;
+  min-width: max-content;
+  height: 40px;
+  background-color: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--radius-full);
+  padding-inline: var(--space-6);
+  margin-top: var(--space-4);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: box-shadow var(--tr-duration-short-2) var(--tr-easing-linear);
+}
+
+.btn:hover:not(:focus) {
+  box-shadow: var(--shadow-1);
+}
+
+.btn:has(> .state-layer) {
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  user-select: none;
+}
+
+.state-layer {
+  background-color: var(--state-layer-bg);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--tr-duration-short-2) var(--tr-easing-linear);
+}
+
+.btn:has(> .state-layer):hover > .state-layer {
+  opacity: 0.08;
+}
+
+.btn:has(> .state-layer):is(:focus, :focus-visible, :focus-within, :active)
+  > .state-layer {
+  opacity: 0.12;
+}
+
+.link {
+  display: inline-block;
+}
+
+.link:where(:hover, :focus-visible) {
+  text-decoration: underline;
+}
+
+.link-primary {
+  color: var(--primary);
+}
+
+@media screen and (width >= 768px) {
+  .title {
+    font-size: var(--fs-display-medium);
+    line-height: var(--lh-display-medium);
+    letter-spacing: var(--ls-n-025);
+  }
+
+  .btn {
+    margin-top: var(--space-8);
+  }
+}
+
+@media screen and (width >= 1200px) {
+  .login-page {
+    grid-template-rows: auto;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .logo {
+    margin-right: auto;
+  }
+
+  .logo img {
+    width: auto;
+    height: 28px;
+  }
+
+  .content {
+    background-size: cover;
+  }
+
+  .bottom-text {
+    font-size: var(--fs-body-large);
+    font-weight: var(--fw-regular);
+    line-height: var(--lh-body-large);
+    letter-spacing: var(--ls-p-050);
+    margin-left: auto;
+  }
+}
+
+@media screen and (width >= 1400px) {
+  .title {
+    font-size: var(--fs-display-large);
+    line-height: var(--lh-display-large);
+  }
+
+  .btn {
+    margin-top: var(--space-10);
+  }
+}

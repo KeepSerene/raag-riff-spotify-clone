@@ -7,20 +7,67 @@
     <meta name="author" content="Dhrubajyoti Bhattacharjee" />
     <meta
       name="description"
-      content="RaagRiff is a way to listen to millions of songs without having to download them."
+      content="RaagRiff: discover, create, and share curated playlists — a lightweight web player that delivers personalized music and seamless in-browser playback. Sign in with Spotify to enable secure streaming via the Spotify Web API and Web Playback SDK."
     />
 
+    <!-- Favicon -->
     <link
       rel="shortcut icon"
       href="/images/favicon.svg"
       sizes="any"
       type="image/svg+xml"
     />
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/login.css" />
 
     <title>Login | RaagRiff</title>
   </head>
 
   <body>
-    <h1>Login page</h1>
+    <article class="login-page">
+      <div class="banner">
+        <img
+          src="/images/login-banner.jpg"
+          alt=""
+          width="1080"
+          height="1080"
+          class="cover-img"
+        />
+      </div>
+
+      <div class="content">
+        <a href="/" class="logo">
+          <img
+            src="/images/logo.svg"
+            alt="RaagRiff logo"
+            width="102"
+            height="24"
+          />
+        </a>
+
+        <div class="wrapper">
+          <h2 class="title headline-medium">
+            Step inside &mdash; where every
+            <strong>riff</strong> meets its <strong>raag!</strong>
+          </h2>
+
+          <a href="/auth" class="btn btn-primary has-icon" data-ripple>
+            <img
+              src="/images/spotify-on-primary.svg"
+              alt=""
+              width="18"
+              height="18"
+            />
+            <span class="label-large">Continue with Spotify</span>
+            <div class="state-layer"></div>
+          </a>
+        </div>
+
+        <p class="bottom-text label-large">
+          Powered by
+          <a href="https://spotify.com" class="link link-primary">Spotify</a>
+        </p>
+      </div>
+    </article>
   </body>
 </html>

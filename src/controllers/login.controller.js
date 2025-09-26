@@ -5,8 +5,8 @@
 
 "use strict";
 
-function login(req, res) {
+function handleLogin(req, res) {
   res.render("./pages/login");
 }
 
-module.exports = { login };
+module.exports = { handleLogin };
