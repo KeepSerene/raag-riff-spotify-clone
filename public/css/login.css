@@ -57,7 +57,7 @@
   box-shadow: var(--shadow-1);
 }
 
-.btn:has(> .state-layer) {
+:has(> .state-layer) {
   overflow: hidden;
   position: relative;
   isolation: isolate;
@@ -72,11 +72,11 @@
   transition: opacity var(--tr-duration-short-2) var(--tr-easing-linear);
 }
 
-.btn:has(> .state-layer):hover > .state-layer {
+:has(> .state-layer):hover > .state-layer {
   opacity: 0.08;
 }
 
-.btn:has(> .state-layer):is(:focus, :focus-visible, :focus-within, :active)
+:has(> .state-layer):is(:focus, :focus-visible, :focus-within, :active)
   > .state-layer {
   opacity: 0.12;
 }
@@ -115,7 +115,12 @@
     margin-right: auto;
   }
 
-  .logo img {
+  /* .logo img {
+    width: auto;
+    height: 28px;
+  } */
+
+  .logo svg {
     width: auto;
     height: 28px;
   }
