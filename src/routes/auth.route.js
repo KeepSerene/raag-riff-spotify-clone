@@ -10,8 +10,12 @@ const {
   handleAuth,
   handleCallback,
 } = require("../controllers/auth.controller");
+const {
+  handleTokensRefresh,
+} = require("../controllers/refresh-tokens.controller");
 
 router.get("/", handleAuth);
 router.get("/callback", handleCallback);
+router.get("/refresh_tokens", handleTokensRefresh); // see user-auth.middleware.js
 
 module.exports = router;

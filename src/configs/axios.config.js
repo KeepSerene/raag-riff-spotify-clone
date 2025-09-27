@@ -6,7 +6,7 @@
 "use strict";
 
 const axios = require("axios");
-const querystring = require("querystring");
+// const querystring = require("querystring");
 const apiConfig = require("./api.config");
 
 const authApi = axios.create({
@@ -19,4 +19,23 @@ const authApi = axios.create({
   },
 });
 
-module.exports = { authApi };
+const webApi = axios.create({
+  baseURL: apiConfig.BASE_URL,
+});
+
+async function getApiResponse(apiEndpoint, access_token) {
+  try {
+    const response = await webApi.get(apiEndpoint, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error retrieving Spotify Web API response:", error);
+    throw error;
+  }
+}
+
+module.exports = { authApi, getApiResponse };

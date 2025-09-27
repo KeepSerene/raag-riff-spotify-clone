@@ -30,6 +30,7 @@ function handleAuth(req, res) {
   );
 }
 
+// Handle Spotify auth callback
 async function handleCallback(req, res) {
   const MILLISECONDS = 1000;
   const ONE_WEEK_IN_MS = 604800000;
@@ -43,7 +44,6 @@ async function handleCallback(req, res) {
     const response = await getSpotifyTokens(code);
 
     if (response.status === 200) {
-      console.log(response.data);
       const { access_token, expires_in, refresh_token } = response.data;
       res.cookie("access_token", access_token, {
         maxAge: expires_in * MILLISECONDS,

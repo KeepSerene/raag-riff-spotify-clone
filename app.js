@@ -9,6 +9,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const loginRouter = require("./src/routes/login.route");
 const authRouter = require("./src/routes/auth.route");
+const homeRouter = require("./src/routes/home.route");
+const handleUserAuthentication = require("./src/middlewares/user-auth.middleware");
 const express = require("express");
 
 const app = express();
@@ -30,5 +32,9 @@ app.set("view engine", "ejs");
  */
 app.use("/login", loginRouter);
 app.use("/auth", authRouter);
+app.use("/", homeRouter);
+
+// Redirect the user to the correct route based on their authentication state
+app.use(handleUserAuthentication);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
