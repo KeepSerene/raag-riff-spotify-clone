@@ -73,5 +73,12 @@
     </button>
 
     <%- include("./menu.ejs") %>
+
+    <!-- prettier-ignore -->
+    <%- include("./icon-btn.ejs", {
+        icon: "close",
+        variant: "clear",
+        dataAttr: "data-search-clear"
+    }) %>
   </div>
 </div>
