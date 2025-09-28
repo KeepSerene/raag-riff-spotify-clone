@@ -28,13 +28,16 @@ app.use(cors()).use(cookieParser());
 app.set("view engine", "ejs");
 
 /**
- * Routes setup
+ * Routes setup (order matters!)
  */
+// Public routes (no auth required)
 app.use("/login", loginRouter);
 app.use("/auth", authRouter);
-app.use("/", homeRouter);
 
-// Redirect the user to the correct route based on their authentication state
+// Applying authentication middleware to all routes before accessing protected routes
 app.use(handleUserAuthentication);
+
+// Protected routes (auth required)
+app.use("/", homeRouter);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

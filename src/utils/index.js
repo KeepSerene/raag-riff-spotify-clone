@@ -6,21 +6,20 @@
 "use strict";
 
 /**
- * Generates a random string containing letters and digits
- * @param {number} length - The supposed length of the random string
- * @returns {string} The generated random string
+ * Generate a random string of specified length
+ * @param {number} length - The length of the random string
+ * @returns {string} - A random string
  */
 function generateRandomString(length) {
-  let randomString = "";
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
 
   for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * chars.length);
-    randomString += chars[randomIndex];
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
 
-  return randomString;
+  return result;
 }
 
 module.exports = {
