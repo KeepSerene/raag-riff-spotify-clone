@@ -5,6 +5,25 @@
 
 "use strict";
 
+/**
+ * Middleware for handling user authentication based on access and refresh tokens in cookies.
+ *
+ * Workflow:
+ * - Checks for the presence of access and refresh tokens in cookies.
+ * - If both tokens are missing, redirects the user to the login page.
+ * - If only the access token is present, redirects to the authentication page.
+ * - If only the refresh token is present, redirects to the token refresh route (preserving the original URL).
+ * - If both tokens are present, passes control to the next middleware or route handler.
+ *
+ * @param {Object} req - Express request object, expects cookies containing access_token and refresh_token.
+ * @param {Object} res - Express response object, used for sending redirects as needed.
+ * @param {Function} next - Express next middleware function, called if authentication passes.
+ *
+ * @returns {void} Redirects or calls `next()` based on authentication status.
+ *
+ * Example usage:
+ * app.use(handleUserAuthentication);
+ */
 function handleUserAuthentication(req, res, next) {
   const { access_token, refresh_token } = req.cookies;
 

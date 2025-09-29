@@ -93,6 +93,7 @@
   color: var(--primary);
 }
 
+/* RESPONSIVENESS */
 @media screen and (width >= 768px) {
   .title {
     font-size: var(--fs-display-medium);

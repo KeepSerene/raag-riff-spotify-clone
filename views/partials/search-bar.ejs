@@ -9,6 +9,7 @@
     xmlns="http://www.w3.org/2000/svg"
     role="img"
     aria-label="RaagRiff logo"
+    class="logo"
     data-logo
   >
     <g>
@@ -73,12 +74,8 @@
     </button>
 
     <%- include("./menu.ejs") %>
-
-    <!-- prettier-ignore -->
-    <%- include("./icon-btn.ejs", {
-        icon: "close",
-        variant: "clear",
-        dataAttr: "data-search-clear"
-    }) %>
   </div>
+
+  <%- include("./icon-btn.ejs", { icon: "close", variant: "clear", dataAttr:
+  "data-search-clear" }) %>
 </div>
