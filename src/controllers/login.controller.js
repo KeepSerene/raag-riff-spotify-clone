@@ -6,6 +6,12 @@
 "use strict";
 
 function handleLogin(req, res) {
+  const { access_token, refresh_token } = req.cookies;
+
+  if (access_token && refresh_token) {
+    return res.redirect("/");
+  }
+
   res.render("./pages/login");
 }
 

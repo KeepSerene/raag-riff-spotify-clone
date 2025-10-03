@@ -8,6 +8,9 @@
     <article class="page custom-scrollbar" data-page>
       <!-- Topbar -->
       <%- include("../partials/top-bar.ejs", locals.currentUserProfile) %>
+
+      <!-- Bottom navigation -->
+      <%- include("../partials/bottom-nav.ejs", { currentRoute: "/" }) %>
     </article>
   </body>
 </html>

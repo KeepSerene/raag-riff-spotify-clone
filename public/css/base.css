@@ -40,12 +40,12 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 
 /* For WebKit browsers and others that support ::selection */
 ::selection {
-  background-color: hsla(159, 85%, 48%, 0.1);
+  background-color: hsla(159, 85%, 48%, 0.2);
 }
 
 /* For Firefox */
 ::-moz-selection {
-  background-color: hsla(159, 85%, 48%, 0.1);
+  background-color: hsla(159, 85%, 48%, 0.2);
 }
 
 /* Screen reader only element styles */
@@ -87,5 +87,15 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   to {
     opacity: 1;
     visibility: visible;
+  }
+}
+
+@keyframes rippleExpand {
+  from {
+    scale: 0;
+  }
+
+  to {
+    scale: 2.5;
   }
 }

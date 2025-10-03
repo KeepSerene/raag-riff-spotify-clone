@@ -6,15 +6,26 @@
 "use strict";
 
 const userApi = require("../api/user.api");
+const playerApi = require("../api/player.api");
 
 async function handleHome(req, res) {
   try {
     const currentUserProfile = await userApi.fetchCurrentUserProfile(req);
-    res.render("./pages/home.ejs", { currentUserProfile });
-  } catch (error) {
-    console.error("Home handler - error fetching user profile:", error.message);
+    const recentlyPlayedTracksInfo =
+      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
+      ({ track }) => track
+    );
+    console.log(recentlyPlayedTracks);
 
-    // If it's a 401 error, the token is likely expired
+    res.render("./pages/home.ejs", {
+      currentUserProfile,
+      // recentlyPlayedTracks,
+    });
+  } catch (error) {
+    console.error("Home handler - error fetching user info:", error.message);
+
+    // If it's a 401 error, the token has likely expired
     if (error.response && error.response.status === 401) {
       console.log(
         "Home handler - 401 error, clearing cookies and redirecting to auth"
