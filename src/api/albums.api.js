@@ -5,29 +5,25 @@
 
 "use strict";
 
-// Docs available at https://developer.spotify.com/documentation/web-api/reference/search (Deprecated!!!)
-
 const { getApiResponse } = require("../configs/axios.config");
 const playerApi = require("./player.api");
 const apiConfig = require("../configs/api.config");
 
 /**
- * Recommendation logic using Spotify Search API.
- * Gets track recommendations based on recently played tracks
+ * Get recommended ALBUMS based on recently played tracks & Spotify Search API
  * @param {Object} req - Express request object.
  * @param {number} itemLimit - Number of items to be returned. Default is 12.
  * @returns {Promise<Object>}
  */
-async function getRecommendedTracks(req, itemLimit = apiConfig.LOWER_LIMIT) {
+async function getRecommendedAlbums(req, itemLimit = apiConfig.LOWER_LIMIT) {
   try {
     const recentlyPlayedTracksInfo =
       await playerApi.getRecentlyPlayedTracksInfo(req, itemLimit);
 
-    // Extract unique artists and tracks from recently played
+    // Extract unique artists and albums from recently played
     const recentArtists = [];
-    const recentTracks = [];
+    const recentAlbums = new Set(); // tracking album IDs to avoid duplicates
     const artistSet = new Set();
-    const trackSet = new Set();
 
     recentlyPlayedTracksInfo.items.forEach(({ track }) => {
       // Collect unique artist names
@@ -38,40 +34,45 @@ async function getRecommendedTracks(req, itemLimit = apiConfig.LOWER_LIMIT) {
         }
       });
 
-      // Collect track names for filtering later
-      if (!trackSet.has(track.id)) {
-        trackSet.add(track.id);
-        recentTracks.push(track.id);
+      // Track recently played album IDs to filter them out later
+      if (track.album && track.album.id) {
+        recentAlbums.add(track.album.id);
       }
     });
 
-    // Take top 3-5 artists and search for their popular tracks
+    // taking top 3-5 artists and search for their albums
     const topArtists = recentArtists.slice(0, 3);
     const searchQuery = topArtists
       .map((name) => `artist:"${name}"`)
       .join(" OR ");
 
+    // Search for albums
     const { data: searchResults } = await getApiResponse(
       `/search?q=${encodeURIComponent(
         searchQuery
-      )}&type=track&limit=${itemLimit}&market=${apiConfig.MARKET}`,
+      )}&type=album&limit=${itemLimit}&market=${apiConfig.MARKET}`,
       req.cookies.access_token
     );
 
-    // Filter out tracks that are already in recently played
-    // and sort by popularity to get "recommended" feel
-    const filteredTracks = searchResults.tracks.items
-      .filter((track) => !trackSet.has(track.id))
-      .sort((a, b) => b.popularity - a.popularity);
+    // Filter out albums that are already in recently played
+    // and sort by popularity/release date to get "recommended" feel
+    const filteredAlbums = searchResults.albums.items
+      .filter((album) => !recentAlbums.has(album.id))
+      .sort((a, b) => {
+        // newest first
+        const dateA = new Date(a.release_date);
+        const dateB = new Date(b.release_date);
+        return dateB - dateA;
+      });
 
     return {
-      ...searchResults.tracks,
-      items: filteredTracks.slice(0, itemLimit),
+      ...searchResults.albums,
+      items: filteredAlbums.slice(0, itemLimit),
     };
   } catch (error) {
-    console.error("Error retrieving recommended tracks:", error);
+    console.error("Error retrieving recommended albums:", error);
     throw error;
   }
 }
 
-module.exports = { getRecommendedTracks };
+module.exports = { getRecommendedAlbums };

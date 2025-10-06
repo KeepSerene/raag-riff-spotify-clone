@@ -14,12 +14,12 @@ async function getRecentlyPlayedTracksInfo(
   req,
   itemLimit = apiConfig.DEFAULT_LIMIT
 ) {
-  const { data: recentlyPlayedTracks } = await getApiResponse(
+  const { data: recentlyPlayedTracksInfo } = await getApiResponse(
     `/me/player/recently-played?limit=${itemLimit}`,
     req.cookies.access_token
   );
 
-  return recentlyPlayedTracks;
+  return recentlyPlayedTracksInfo;
 }
 
 module.exports = { getRecentlyPlayedTracksInfo };

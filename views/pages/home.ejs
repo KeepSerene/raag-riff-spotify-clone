@@ -5,12 +5,46 @@
   </head>
 
   <body>
-    <article class="page custom-scrollbar" data-page>
+    <main class="page custom-scrollbar" data-page>
       <!-- Topbar -->
       <%- include("../partials/top-bar.ejs", locals.currentUserProfile) %>
 
+      <!-- Main content -->
+      <article class="main-content" data-main-content>
+        <% if (locals.recommendedAlbums.length > 0) { %>
+        <section class="section new-release">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">Recommended for you</h2>
+          </div>
+
+          <div class="slider">
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% locals.recommendedAlbums.forEach(({ id, name: title, artists, images, uri }) => { %>
+                <%
+                  const text = artists.map(({ name }) => name).join(", "); 
+                  const img300x300 = images.find(img => img.width === 300);
+                  console.log('Image sized 300x300:', img300x300); 
+                %>
+
+                <%-
+                  include("../partials/card.ejs", {
+                    type: 'album',
+                    title,
+                    uri,
+                    link: `/album/${id}`,
+                    image: img300x300,
+                  })
+                %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+        <% } %>
+      </article>
+
       <!-- Bottom navigation -->
       <%- include("../partials/bottom-nav.ejs", { currentRoute: "/" }) %>
-    </article>
+    </main>
   </body>
 </html>

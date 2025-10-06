@@ -6,21 +6,28 @@
 "use strict";
 
 const userApi = require("../api/user.api");
-const playerApi = require("../api/player.api");
+// const playerApi = require("../api/player.api");
+// const tracksApi = require("../api/tracks.api");
+const albumsApi = require("../api/albums.api");
 
 async function handleHome(req, res) {
   try {
     const currentUserProfile = await userApi.fetchCurrentUserProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
-    const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
-      ({ track }) => track
-    );
-    console.log(recentlyPlayedTracks);
+    // const recentlyPlayedTracksInfo =
+    //   await playerApi.getRecentlyPlayedTracksInfo(req);
+    // const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
+    //   ({ track }) => track
+    // );
+    // const recommendedTracksInfo = await tracksApi.getRecommendedTracks(req);
+    const recommendedAlbumsInfo = await albumsApi.getRecommendedAlbums(req);
+    const recommendedAlbums = recommendedAlbumsInfo.items;
+    // console.log("Recommended tracks info:", recommendedTracksInfo);
+    console.log("Recommended albums info:", recommendedAlbumsInfo);
 
     res.render("./pages/home.ejs", {
       currentUserProfile,
       // recentlyPlayedTracks,
+      recommendedAlbums,
     });
   } catch (error) {
     console.error("Home handler - error fetching user info:", error.message);

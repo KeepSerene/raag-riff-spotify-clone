@@ -1,0 +1,17 @@
+<% const { width = 300, height = 300, url = `/images/${locals.type}-banner.png`,
+} = locals.image ?? {}; %>
+
+<div class="card <%= locals.variant %>" title="<%= locals.title %>" data-ripple>
+  <div class="card-banner">
+    <figure class="figure-img">
+      <img
+        src="<%= url %>"
+        alt="<%= title %>"
+        width="<%= width %>"
+        height="<%= height %>"
+        class="cover-img"
+        data-lazy-loading
+      />
+    </figure>
+  </div>
+</div>
