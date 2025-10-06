@@ -14,4 +14,26 @@
       />
     </figure>
   </div>
+
+  <div class="card-content">
+    <h3 class="title-medium card-title">
+      <%= locals.title %>
+    </h3>
+
+    <p class="body-medium card-text has-separator">
+      <% if (locals.year) { %>
+        <span><%= locals.year %></span>
+        <div class="separator"></div>
+      <% } %>
+
+      <%- locals.text %>
+    </p>
+  </div>
+
+  <a href="<%= locals.link %>" class="card-link" aria-label="<%= locals.title %>"></a>
+
+  <div class="state-layer"></div>
+
+  <%- include("./play-btn.ejs", { variant: "filled", dataAttr:
+  `data-uri="${locals.uri}"` }) %>
 </div>

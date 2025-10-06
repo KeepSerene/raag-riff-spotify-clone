@@ -327,3 +327,30 @@
   width: 100%;
   opacity: 1;
 }
+
+.title-wrapper {
+  margin-bottom: var(--space-4);
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.section-title {
+  color: var(--on-surface);
+}
+
+.figure-img {
+  background-color: var(--white-alpha-20);
+  overflow: hidden;
+}
+
+:where(.card) .play-btn {
+  box-shadow: var(--shadow-1);
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  transition: var(--tr-duration-short-4) var(--tr-easing-standard);
+  transition-property: opacity, visibility, transform;
+}
