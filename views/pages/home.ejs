@@ -24,7 +24,6 @@
                 <%
                   const text = artists.map(({ name }) => name).join(", "); 
                   const img300x300 = images.find(img => img.width === 300);
-                  console.log('Image sized 300x300:', img300x300); 
                 %>
 
                 <%-
@@ -33,7 +32,7 @@
                     title,
                     text,
                     uri,
-                    link: `/album/${id}`,
+                    link: `/albums/${id}`,
                     image: img300x300,
                   })
                 %>

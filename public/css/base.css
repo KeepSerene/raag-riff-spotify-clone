@@ -75,8 +75,9 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 }
 
 .slider-inner {
+  min-width: max-content;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: var(--space-2);
 }
 
@@ -92,9 +93,74 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   object-fit: cover;
 }
 
+/* Card styles */
+.card {
+  --state-layer-bg: var(--on-surface);
+
+  background-color: var(--surface-container-highest);
+  border-radius: var(--radius-medium);
+  overflow: hidden;
+  position: relative;
+}
+
+.card-link {
+  position: absolute;
+  inset: 0;
+}
+
+.card-banner {
+  position: relative;
+}
+
+.card-banner .figure-img {
+  aspect-ratio: 1;
+  border-radius: var(--radius-medium);
+}
+
+.card .play-btn {
+  right: 16px;
+  bottom: 16px;
+  transform: translateY(16px);
+}
+
+.card:where(:hover, :focus-visible, :has(.play-btn.active)) .play-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.card-content {
+  padding: var(--space-4);
+}
+
+.card-title {
+  color: var(--on-surface);
+  margin-bottom: var(--space-1);
+}
+
+.card-text {
+  color: var(--on-surface-variant);
+  opacity: 0.8;
+}
+
 /* Utils */
 .section {
   margin-top: var(--space-4);
+}
+
+.truncate {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 /* Animations */

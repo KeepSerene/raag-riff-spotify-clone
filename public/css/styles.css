@@ -354,3 +354,12 @@
   transition: var(--tr-duration-short-4) var(--tr-easing-standard);
   transition-property: opacity, visibility, transform;
 }
+
+.play-btn .icon {
+  font-variation-settings: "FILL" 1;
+}
+
+.play-btn.active .play-icon,
+.play-btn:not(.active) .pause-icon {
+  display: none;
+}

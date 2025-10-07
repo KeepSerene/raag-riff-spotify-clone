@@ -5,7 +5,7 @@
 
 "use strict";
 
-// import { addEventListenersToElems } from "./utils.js";
+import { addEventListenersToElems } from "./utils.js";
 
 /**
  * Search clear functionality
@@ -101,3 +101,40 @@ function createRipple(elem) {
 }
 
 $rippleElems.forEach((elem) => createRipple(elem));
+
+/**
+ * Lazy loading animation
+ */
+window.addEventListener("DOMContentLoaded", () => {
+  const $lazyImages = document.querySelectorAll("[data-lazy-loaded]");
+
+  const fadeInImage = ($elem) => {
+    $elem.animate({ opacity: 1 }, { duration: 200, fill: "forwards" });
+  };
+
+  $lazyImages.forEach(($img) => {
+    $img.style.opacity = 0;
+
+    if ($img.complete) {
+      fadeInImage($img);
+    } else {
+      $img.addEventListener("load", () => fadeInImage($img));
+    }
+  });
+});
+
+/**
+ * Bottom nav item active
+ */
+const $bottomNavItems = document.querySelectorAll("[data-bottom-nav-item]");
+const $activeBottomNavItem = document.querySelector(
+  "[data-bottom-nav-item].active"
+);
+
+function handleActiveBottomNavItem() {
+  $activeBottomNavItem?.classList.remove("active");
+  this.classList.add("active");
+}
+
+$bottomNavItems &&
+  addEventListenersToElems($bottomNavItems, "click", handleActiveBottomNavItem);

@@ -9,6 +9,7 @@ const userApi = require("../api/user.api");
 // const playerApi = require("../api/player.api");
 // const tracksApi = require("../api/tracks.api");
 const albumsApi = require("../api/albums.api");
+const artistsApi = require("../api/artists.api");
 
 async function handleHome(req, res) {
   try {
@@ -22,12 +23,24 @@ async function handleHome(req, res) {
     const recommendedAlbumsInfo = await albumsApi.getRecommendedAlbums(req);
     const recommendedAlbums = recommendedAlbumsInfo.items;
     // console.log("Recommended tracks info:", recommendedTracksInfo);
-    console.log("Recommended albums info:", recommendedAlbumsInfo);
+    // console.log("Recommended albums info:", recommendedAlbumsInfo);
+    const recommendedArtistIdEntries = recommendedAlbums.map(({ artists }) =>
+      artists.map(({ id }) => id)
+    );
+    const stringifiedUniqueIds = [
+      ...new Set(recommendedArtistIdEntries.flat(1)),
+    ].join(",");
+    const recommendedArtistsInfo = await artistsApi.getSeveralArtistsInfo(
+      req,
+      stringifiedUniqueIds
+    );
+    console.log("Recommended artists info:", recommendedArtistsInfo);
 
     res.render("./pages/home.ejs", {
       currentUserProfile,
       // recentlyPlayedTracks,
       recommendedAlbums,
+      recommendedArtistsInfo,
     });
   } catch (error) {
     console.error("Home handler - error fetching user info:", error.message);
