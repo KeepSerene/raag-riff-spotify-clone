@@ -7,7 +7,6 @@
 
 // Docs available at https://developer.spotify.com/documentation/web-api/reference/get-multiple-artists
 
-const apiConfig = require("../configs/api.config");
 const { getApiResponse } = require("../configs/axios.config");
 
 async function getSeveralArtistsInfo(req, artistIds) {
