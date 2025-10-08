@@ -112,9 +112,18 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   position: relative;
 }
 
+.artist-card .card-banner {
+  padding-top: var(--space-4);
+  padding-inline: var(--space-4);
+}
+
 .card-banner .figure-img {
   aspect-ratio: 1;
   border-radius: var(--radius-medium);
+}
+
+.artist-card .figure-img {
+  border-radius: var(--radius-full);
 }
 
 .card .play-btn {
@@ -141,6 +150,10 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 .card-text {
   color: var(--on-surface-variant);
   opacity: 0.8;
+}
+
+.artist-card .card-text {
+  text-transform: capitalize;
 }
 
 /* Utils */

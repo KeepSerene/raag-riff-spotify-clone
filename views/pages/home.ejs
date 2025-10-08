@@ -1,3 +1,9 @@
+<!-- prettier-ignore -->
+<% 
+  const { artists: recommendedArtists } = locals.recommendedArtistsInfo;
+  const {items: newReleasesCurrentPage, next: newReleasesNextPage} = locals.newReleases; 
+%>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,6 +17,7 @@
 
       <!-- Main content -->
       <article class="main-content" data-main-content>
+        <!-- Recommended albums -->
         <% if (locals.recommendedAlbums.length > 0) { %>
         <section class="section new-release">
           <div class="title-wrapper">
@@ -41,6 +48,74 @@
           </div>
         </section>
         <% } %>
+
+        <!-- Recommended artists -->
+        <% if (recommendedArtists.length > 0) { %>
+        <section class="section new-release">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">Artists for you</h2>
+          </div>
+
+          <div class="slider">
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% recommendedArtists.forEach(({ name: title, id, type, uri, images }) => { %>
+                <% const [image] = images || [] %>
+
+                <%- 
+                  include("../partials/card.ejs", {
+                    type,
+                    title,
+                    uri,
+                    image,
+                    variant: "artist-card",
+                    text: type,
+                    link: `artists/${id}`
+                  }) 
+                %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+        <% } %>
+
+        <!-- New releases (Albums) -->
+        <section class="section new-release">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">New Releases</h2>
+
+            <% if (newReleasesNextPage) { %>
+            <a href="/albums" class="btn btn-link" data-ripple>
+              <span class="label-large">See all</span>
+
+              <div class="state-layer"></div>
+            </a>
+            <% } %>
+          </div>
+
+          <div class="slider">
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% newReleasesCurrentPage.forEach(({ id, name: title, images, artists, uri }) => { %>
+                <%
+                  const text = artists.map(({name}) => name).join(", ");
+                  const img300x300 = images.find(img => img.width === 300); 
+                %>
+
+                <%-
+                  include("../partials/card.ejs", {
+                    type: "album",
+                    title,
+                    text,
+                    image: img300x300,
+                    link: `/albums/${id}`,
+                    uri
+                  }) 
+                %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
       </article>
 
       <!-- Bottom navigation -->
