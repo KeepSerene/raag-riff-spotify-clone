@@ -53,7 +53,37 @@ function calculateOffset(params, limit = apiConfig.DEFAULT_LIMIT) {
   return limit * (page - 1);
 }
 
+/**
+ * Shuffle array using Fisher-Yates algorithm for randomness
+ * @param {Array} array - Array to shuffle
+ * @returns {Array} Shuffled array
+ */
+function shuffleArray(array) {
+  const shuffled = [...array];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+}
+
+/**
+ * Get random items from array
+ * @param {Array} array - Source array
+ * @param {number} count - Number of items to get
+ * @returns {Array} Random items
+ */
+function getRandomItems(array, count) {
+  const shuffled = shuffleArray(array);
+
+  return shuffled.slice(0, Math.min(count, array.length));
+}
+
 module.exports = {
   generateRandomString,
   calculateOffset,
+  shuffleArray,
+  getRandomItems,
 };

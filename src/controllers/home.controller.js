@@ -11,6 +11,7 @@ const userApi = require("../api/user.api");
 const albumsApi = require("../api/albums.api");
 const artistsApi = require("../api/artists.api");
 const newReleasesApi = require("../api/new-releases.api");
+const playlistsApi = require("../api/playlists.api");
 
 async function handleHome(req, res) {
   try {
@@ -36,7 +37,8 @@ async function handleHome(req, res) {
       stringifiedUniqueIds
     );
     const newReleases = await newReleasesApi.getNewReleasesWithPagination(req);
-    console.log("Newly released albums info:", newReleases);
+    const featuredPlaylistsInfo = await playlistsApi.getFeaturedPlaylists(req);
+    console.log("Featured playlists info:", featuredPlaylistsInfo);
 
     res.render("./pages/home.ejs", {
       currentUserProfile,

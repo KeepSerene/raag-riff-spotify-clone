@@ -8,6 +8,7 @@
 const { getApiResponse } = require("../configs/axios.config");
 const playerApi = require("./player.api");
 const apiConfig = require("../configs/api.config");
+const { shuffleArray } = require("../utils");
 
 /**
  * Get recommended ALBUMS based on recently played tracks & Spotify Search API
@@ -22,7 +23,7 @@ async function getRecommendedAlbums(req, itemLimit = apiConfig.LOWER_LIMIT) {
 
     // Extract unique artists and albums from recently played
     const recentArtists = [];
-    const recentAlbums = new Set(); // tracking album IDs to avoid duplicates
+    const recentAlbumIds = new Set(); // tracking album IDs to avoid duplicates
     const artistSet = new Set();
 
     recentlyPlayedTracksInfo.items.forEach(({ track }) => {
@@ -36,38 +37,47 @@ async function getRecommendedAlbums(req, itemLimit = apiConfig.LOWER_LIMIT) {
 
       // Track recently played album IDs to filter them out later
       if (track.album && track.album.id) {
-        recentAlbums.add(track.album.id);
+        recentAlbumIds.add(track.album.id);
       }
     });
 
-    // taking top 3-5 artists and search for their albums
-    const topArtists = recentArtists.slice(0, 3);
+    const topArtists = recentArtists.slice(0, 5);
     const searchQuery = topArtists
       .map((name) => `artist:"${name}"`)
       .join(" OR ");
 
     // Search for albums
     const { data: searchResults } = await getApiResponse(
-      `/search?q=${encodeURIComponent(
-        searchQuery
-      )}&type=album&limit=${itemLimit}&market=${apiConfig.MARKET}`,
+      `/search?q=${encodeURIComponent(searchQuery)}&type=album&limit=${
+        itemLimit * 2 // larger search pool
+      }&market=${apiConfig.MARKET}`,
       req.cookies.access_token
     );
 
-    // Filter out albums that are already in recently played
-    // and sort by popularity/release date to get "recommended" feel
-    const filteredAlbums = searchResults.albums.items
-      .filter((album) => !recentAlbums.has(album.id))
-      .sort((a, b) => {
-        // newest first
-        const dateA = new Date(a.release_date);
-        const dateB = new Date(b.release_date);
-        return dateB - dateA;
-      });
+    // track unique albums only
+    const uniqueAlbums = [];
+    const seenAlbumIds = new Set(recentAlbumIds);
+    searchResults.albums.items.forEach((album) => {
+      if (!seenAlbumIds.has(album.id)) {
+        seenAlbumIds.add(album.id);
+        uniqueAlbums.push(album);
+      }
+    });
+    // Sort by release date to get newest first
+    const sortedAlbums = uniqueAlbums.sort((a, b) => {
+      const dateA = new Date(a.release_date);
+      const dateB = new Date(b.release_date);
+
+      return dateB - dateA;
+    });
+    // adding randomness to make recommendations feel fresh on page refresh
+    const shuffledAlbums = shuffleArray(sortedAlbums);
+    // taking a random subset that includes both recent and older albums
+    const finalAlbums = shuffledAlbums.slice(0, itemLimit);
 
     return {
       ...searchResults.albums,
-      items: filteredAlbums.slice(0, itemLimit),
+      items: finalAlbums,
     };
   } catch (error) {
     console.error("Error retrieving recommended albums:", error);
