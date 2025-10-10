@@ -149,11 +149,8 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 
 .card-text {
   color: var(--on-surface-variant);
-  opacity: 0.8;
-}
-
-.artist-card .card-text {
   text-transform: capitalize;
+  opacity: 0.8;
 }
 
 /* Utils */

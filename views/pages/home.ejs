@@ -1,7 +1,9 @@
 <!-- prettier-ignore -->
 <% 
   const { artists: recommendedArtists } = locals.recommendedArtistsInfo;
-  const {items: newReleasesCurrentPage, next: newReleasesNextPage} = locals.newReleases; 
+  const { items: newReleasesCurrentPage, next: newReleasesNextPage } = locals.newReleases;
+  const { playlists: { items: playlistsCurrentPage, next: playlistsNextPage}} = locals.featuredPlaylistsInfo; 
+  const { playlists: { items: catPlaylistsCurrentPage, next: catPlaylistsNextPage}} = locals.categoryPlaylistsInfo; 
 %>
 
 <!DOCTYPE html>
@@ -111,6 +113,82 @@
                     link: `/albums/${id}`,
                     uri
                   }) 
+                %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+
+        <!-- Featured playlists -->
+        <section class="section new-release">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">Popular Playlists</h2>
+
+            <% if (playlistsNextPage) { %>
+            <a href="/playlists" class="btn btn-link" data-ripple>
+              <span class="label-large">See all</span>
+
+              <div class="state-layer"></div>
+            </a>
+            <% } %>
+          </div>
+
+          <div class="slider">
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% playlistsCurrentPage.forEach(({ id, name: title, description, images, uri, owner }) => { %>
+                <%
+                  const text = description || owner?.display_name || "Spotify";
+                  const [image] = images || [];
+                %>
+
+                <%-
+                  include("../partials/card.ejs", {
+                    type: "playlist",
+                    title,
+                    text,
+                    uri,
+                    image,
+                    link: `/playlists/${id}`
+                  })
+                %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+
+        <!-- Category playlists -->
+        <section class="section new-release">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">Top Playlists</h2>
+
+            <% if (catPlaylistsNextPage) { %>
+            <a href="/explore/toplists" class="btn btn-link" data-ripple>
+              <span class="label-large">See all</span>
+
+              <div class="state-layer"></div>
+            </a>
+            <% } %>
+          </div>
+
+          <div class="slider">
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% catPlaylistsCurrentPage.forEach(({ id, name: title, description, images, uri, owner }) => { %>
+                <%
+                  const text = description || owner?.display_name || "Spotify";
+                  const [image] = images || [];
+                %>
+
+                <%-
+                  include("../partials/card.ejs", {
+                    type: "playlist",
+                    title,
+                    text,
+                    uri,
+                    image,
+                    link: `/playlists/${id}`
+                  })
                 %>
               <% }) %>
             </div>

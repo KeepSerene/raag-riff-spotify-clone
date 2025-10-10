@@ -7,7 +7,7 @@
 
 const apiConfig = require("../configs/api.config");
 const { getApiResponse } = require("../configs/axios.config");
-const { shuffleArray, getRandomItems } = require("../utils");
+const { shuffleArray, getRandomItems, calculateOffset } = require("../utils");
 const playerApi = require("./player.api");
 
 /**
@@ -19,6 +19,10 @@ const playerApi = require("./player.api");
  */
 async function getFeaturedPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
   try {
+    // Calculate offset for pagination support
+    const offset = calculateOffset(req.params, itemLimit);
+    const currentPage = req.params.page ?? 1;
+
     // Get recently played tracks to understand user preferences
     const recentlyPlayedTracksInfo =
       await playerApi.getRecentlyPlayedTracksInfo(req, itemLimit);
@@ -76,9 +80,15 @@ async function getFeaturedPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
           req.cookies.access_token
         );
 
-        // Filter out duplicates and add to collection
+        // Filter out null/undefined playlists and duplicates
         searchResults.playlists.items.forEach((playlist) => {
-          if (!playlistIds.has(playlist.id) && playlist.tracks.total > 0) {
+          if (
+            playlist &&
+            playlist.id &&
+            !playlistIds.has(playlist.id) &&
+            playlist.tracks &&
+            playlist.tracks.total > 0
+          ) {
             playlistIds.add(playlist.id);
             allPlaylists.push(playlist);
           }
@@ -100,15 +110,32 @@ async function getFeaturedPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
       return followersB - followersA;
     });
 
-    // applying shuffling to top results for fresh recommendations on refresh
+    // applying shuffling to top results for fresh recommendations on page refresh
     const topPlaylists = sortedPlaylists.slice(0, itemLimit * 3);
     const shuffledPlaylists = shuffleArray(topPlaylists);
 
+    // applying pagination to the shuffled results
+    const totalPlaylists = shuffledPlaylists.length;
+    const paginatedPlaylists = shuffledPlaylists.slice(
+      offset,
+      offset + itemLimit
+    );
+
+    // determine if there's a next page
+    const hasNextPage = offset + itemLimit < totalPlaylists;
+    const nextPageUrl = hasNextPage
+      ? `${req.baseUrl}?page=${parseInt(currentPage) + 1}`
+      : null;
+
     return {
+      baseUrl: req.baseUrl,
+      page: currentPage,
       playlists: {
-        items: shuffledPlaylists.slice(0, itemLimit),
-        total: shuffledPlaylists.length,
+        items: paginatedPlaylists,
+        total: totalPlaylists,
         limit: itemLimit,
+        offset,
+        next: nextPageUrl,
       },
     };
   } catch (error) {
@@ -117,4 +144,113 @@ async function getFeaturedPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
   }
 }
 
-module.exports = { getFeaturedPlaylists };
+/**
+ * Get playlists for a specific category
+ * Uses Spotify Search API to find category-based playlists
+ * @param {Object} req - Express request object
+ * @param {number} itemLimit - Number of playlists to return. Default is 12.
+ * @returns {Promise<Object>}
+ */
+async function getCategoryPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
+  try {
+    // Extract category from params with default value
+    const categoryId = req.params.categoryId ?? "toplists";
+
+    // Calculate offset for pagination support
+    const offset = calculateOffset(req.params, itemLimit);
+    const currentPage = req.params.page ?? 1;
+
+    // Map category IDs to search-friendly terms
+    const categorySearchTerms = {
+      toplists: "top hits popular charts",
+      pop: "pop music",
+      hiphop: "hip hop rap",
+      rock: "rock music",
+      workout: "workout fitness gym",
+      chill: "chill relax ambient",
+      party: "party dance",
+      focus: "focus study concentration",
+      country: "country music",
+      latin: "latin music",
+      rnb: "r&b soul",
+      indie: "indie alternative",
+      electronic: "electronic edm",
+      jazz: "jazz music",
+      classical: "classical music",
+      metal: "metal rock",
+      sleep: "sleep relaxation",
+      mood: "mood vibes",
+      travel: "travel",
+      gaming: "gaming",
+    };
+
+    // Get search term for the category, fallback to category ID itself
+    const searchQuery = categorySearchTerms[categoryId] || categoryId;
+
+    // Fetch playlists using search API with increased limit for better filtering
+    const { data: searchResults } = await getApiResponse(
+      `/search?q=${encodeURIComponent(
+        searchQuery
+      )}&type=playlist&limit=50&market=${apiConfig.MARKET}`,
+      req.cookies.access_token
+    );
+
+    // Filter and collect valid playlists
+    const allPlaylists = [];
+    const playlistIds = new Set();
+
+    searchResults.playlists.items.forEach((playlist) => {
+      if (
+        playlist &&
+        playlist.id &&
+        !playlistIds.has(playlist.id) &&
+        playlist.tracks &&
+        playlist.tracks.total > 0
+      ) {
+        playlistIds.add(playlist.id);
+        allPlaylists.push(playlist);
+      }
+    });
+
+    // Sort by popularity (track count and implicit popularity)
+    const sortedPlaylists = allPlaylists.sort((a, b) => {
+      const tracksA = a.tracks?.total || 0;
+      const tracksB = b.tracks?.total || 0;
+      return tracksB - tracksA;
+    });
+
+    // Apply pagination
+    const totalPlaylists = sortedPlaylists.length;
+    const paginatedPlaylists = sortedPlaylists.slice(
+      offset,
+      offset + itemLimit
+    );
+
+    // Determine if there's a next page
+    const hasNextPage = offset + itemLimit < totalPlaylists;
+    const nextPageUrl = hasNextPage
+      ? `${req.baseUrl}/${categoryId}?page=${parseInt(currentPage) + 1}`
+      : null;
+
+    return {
+      baseUrl: `${req.baseUrl}/${categoryId}`,
+      page: currentPage,
+      categoryId,
+      playlists: {
+        items: paginatedPlaylists,
+        total: totalPlaylists,
+        limit: itemLimit,
+        offset: offset,
+        next: nextPageUrl,
+      },
+    };
+  } catch (error) {
+    console.error(
+      `Error retrieving category playlists for "${req.params.categoryId}":`,
+      error
+    );
+    throw error;
+  }
+}
+
+module.exports = { getFeaturedPlaylists, getCategoryPlaylists };
