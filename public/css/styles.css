@@ -363,3 +363,215 @@
 .play-btn:not(.active) .pause-icon {
   display: none;
 }
+
+.player-sm {
+  --state-layer-bg: var(--on-surface-variant);
+
+  width: 100%;
+  height: var(--player-sm-height);
+  background-color: var(--surface-container);
+  color: var(--on-surface-variant);
+  padding-inline: var(--space-4) var(--space-2);
+  box-shadow: var(--shadow-2);
+  position: fixed;
+  bottom: var(--bottom-nav-height);
+  left: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  transition: var(--tr-duration-short-4) var(--tr-easing-emphasized);
+}
+
+.player-sm.hide {
+  display: none;
+}
+
+.track-info {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.track-banner {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-small);
+}
+
+.track-title {
+  color: var(--on-surface);
+  margin-bottom: var(--space-1);
+}
+
+.track-text {
+  opacity: 0.7;
+}
+
+.player-sm .play-btn {
+  z-index: 2;
+}
+
+.progress {
+  appearance: none;
+  width: 100%;
+  height: 1px;
+  border: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.progress::-webkit-progress-bar {
+  background-color: var(--surface-container-highest);
+}
+
+.progress::-webkit-progress-value {
+  height: 1px;
+  background-color: var(--primary);
+}
+
+.player-modal-toggler-btn {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.player-lg {
+  width: 100%;
+  background-color: var(--surface-container-low);
+  color: var(--on-surface-variant);
+  border-top-left-radius: var(--radius-extra-large);
+  border-top-right-radius: var(--radius-extra-large);
+  padding-inline: var(--space-6);
+  padding-bottom: var(--space-10);
+  position: fixed;
+  top: 100%;
+  left: 0;
+  z-index: 6;
+  visibility: hidden;
+  transition: var(--tr-duration-medium-2) var(--tr-easing-emphasized);
+}
+
+.player-lg.active {
+  transform: translateY(-100%);
+  visibility: visible;
+}
+
+.player-lg .handle-wrapper {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player-lg .handle {
+  width: 32px;
+  height: 4px;
+  background-color: var(--on-surface-variant);
+  opacity: 0.4;
+}
+
+.player-lg .track-info {
+  gap: var(--space-6);
+}
+
+.player-lg .track-banner {
+  width: 96px;
+  height: 96px;
+}
+
+.player-range-wrapper {
+  padding-block: var(--space-6) var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player-range-wrapper .player-range {
+  order: -1;
+}
+
+.player-range {
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.player-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--radius-full);
+}
+
+.player-range::-webkit-slider-thumb {
+  --shadow-spread: 0px;
+
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 var(--shadow-spread) #12e29a14, 0 1px 3px 1px #00000026,
+    0 1px 2px 0 #0000004d;
+  margin-top: -6px;
+  transition: var(--tr-duration-short-2) var(--tr-easing-standard);
+}
+
+.player-range::-webkit-slider-thumb:hover {
+  --shadow-spread: 10px;
+}
+
+.player-control-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.player-control-btns .icon {
+  font-variation-settings: "FILL" 1;
+}
+
+.player-volume-controls {
+  display: none;
+}
+
+.player-modal-overlay {
+  background-color: var(--black);
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  transition: var(--tr-duration-short-2) var(--tr-easing-linear);
+}
+
+.player-modal-overlay.active {
+  opacity: 0.5;
+  visibility: visible;
+}
+
+.footer {
+  color: var(--on-surface-variant);
+  border-top: 1px solid var(--outline-variant);
+  padding-top: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.social-link:where(:hover, :focus-visible) {
+  text-decoration: underline;
+}
+
+.footer-text {
+  opacity: 0.8;
+}
+
+.footer .copyright-year {
+  display: inline;
+}

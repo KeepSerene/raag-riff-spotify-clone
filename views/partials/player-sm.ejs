@@ -1,0 +1,25 @@
+<div class="player-sm hide" data-player>
+  <div class="track-info">
+    <figure class="figure-img track-banner" data-track-banner>
+      <img src="" alt="" class="cover-img" />
+    </figure>
+
+    <div style="min-width: 0">
+      <p class="title-small track-title truncate" data-track-name></p>
+
+      <p class="title-small track-text truncate" data-track-artists></p>
+    </div>
+  </div>
+
+  <%- include("../partials/play-btn.ejs", { dataAttr: "data-player-control-play"
+  }) %>
+
+  <progress class="progress" data-player-sm-progress></progress>
+
+  <button
+    type="button"
+    class="player-modal-toggler-btn state-layer"
+    aria-label="Click to open the modal view of the currently playing track"
+    data-player-modal-toggler
+  ></button>
+</div>

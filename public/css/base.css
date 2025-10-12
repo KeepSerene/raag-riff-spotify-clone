@@ -41,11 +41,13 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 /* For WebKit browsers and others that support ::selection */
 ::selection {
   background-color: hsla(159, 85%, 48%, 0.2);
+  color: var(--on-surface-variant);
 }
 
 /* For Firefox */
 ::-moz-selection {
   background-color: hsla(159, 85%, 48%, 0.2);
+  color: var(--on-surface-variant);
 }
 
 /* Screen reader only element styles */
@@ -153,7 +155,27 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   opacity: 0.8;
 }
 
-/* Utils */
+/* Button styles */
+.btn {
+  min-width: max-content;
+  max-width: max-content;
+  height: 40px;
+  border-radius: var(--radius-full);
+  padding-inline: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.btn-link {
+  --state-layer-bg: var(--on-surface);
+
+  color: var(--on-surface-variant);
+  height: 28px;
+  padding-inline: var(--space-3);
+}
+
+/* Utility styles */
 .section {
   margin-top: var(--space-4);
 }
@@ -171,6 +193,24 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   line-clamp: 2;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.has-separator {
+  color: var(--on-surface-variant);
+}
+
+.has-separator > * {
+  display: inline;
+}
+
+.separator {
+  display: inline-flex;
+  width: 4px;
+  height: 4px;
+  background-color: var(--on-surface-variant);
+  border-radius: var(--radius-full);
+  margin-inline: var(--space-1);
+  margin-block: var(--space-05);
 }
 
 /* Animations */

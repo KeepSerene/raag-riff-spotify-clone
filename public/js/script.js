@@ -138,3 +138,28 @@ function handleActiveBottomNavItem() {
 
 $bottomNavItems &&
   addEventListenersToElems($bottomNavItems, "click", handleActiveBottomNavItem);
+
+/**
+ * Copyright year
+ */
+const $copyrightYearSpan = document.querySelector("[data-copyright-year]");
+$copyrightYearSpan.innerText = new Date().getFullYear().toString();
+
+/**
+ * Player modal toggle
+ */
+const $playerModal = document.querySelector("[data-player-modal]");
+const $playerModalTogglers = document.querySelectorAll(
+  "[data-player-modal-toggler]"
+);
+const $playerModalOverlay = document.querySelector(
+  "[data-player-modal-overlay]"
+);
+
+function togglePlayerModal() {
+  $playerModal.classList.toggle("active");
+  $playerModalOverlay.classList.toggle("active");
+}
+
+$playerModalTogglers &&
+  addEventListenersToElems($playerModalTogglers, "click", togglePlayerModal);
