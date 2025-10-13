@@ -22,17 +22,20 @@ async function handleHome(req, res) {
     const stringifiedUniqueIds = [
       ...new Set(recommendedArtistIdEntries.flat(1)),
     ].join(",");
-    const recommendedArtistsInfo = await artistsApi.getSeveralArtistsInfo(
-      req,
-      stringifiedUniqueIds
-    );
+    // only fetch artist info if we have valid IDs
+    let recommendedArtistsInfo = { artists: [] };
+    if (stringifiedUniqueIds && stringifiedUniqueIds.length > 0) {
+      recommendedArtistsInfo = await artistsApi.getSeveralArtistsInfo(
+        req,
+        stringifiedUniqueIds
+      );
+    }
     const newReleases = await newReleasesApi.getNewReleasesWithPagination(req);
     const featuredPlaylistsInfo = await playlistsApi.getFeaturedPlaylists(req);
     const categoryPlaylistsInfo = await playlistsApi.getCategoryPlaylists(req);
 
     res.render("./pages/home.ejs", {
       currentUserProfile,
-      // recentlyPlayedTracks,
       recommendedAlbums,
       recommendedArtistsInfo,
       newReleases,

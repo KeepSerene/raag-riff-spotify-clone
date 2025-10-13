@@ -20,7 +20,6 @@ async function getRecommendedAlbums(req, itemLimit = apiConfig.LOWER_LIMIT) {
   try {
     const recentlyPlayedTracksInfo =
       await playerApi.getRecentlyPlayedTracksInfo(req, itemLimit);
-
     // Extract unique artists and albums from recently played
     const recentArtists = [];
     const recentAlbumIds = new Set(); // tracking album IDs to avoid duplicates
@@ -42,6 +41,8 @@ async function getRecommendedAlbums(req, itemLimit = apiConfig.LOWER_LIMIT) {
     });
 
     const topArtists = recentArtists.slice(0, 5);
+    console.log("Top artists", topArtists);
+
     const searchQuery = topArtists
       .map((name) => `artist:"${name}"`)
       .join(" OR ");
@@ -53,6 +54,7 @@ async function getRecommendedAlbums(req, itemLimit = apiConfig.LOWER_LIMIT) {
       }&market=${apiConfig.MARKET}`,
       req.cookies.access_token
     );
+    console.log("Search results", searchResults);
 
     // track unique albums only
     const uniqueAlbums = [];

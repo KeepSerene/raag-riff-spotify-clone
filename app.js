@@ -9,6 +9,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const loginRouter = require("./src/routes/login.route");
 const authRouter = require("./src/routes/auth.route");
+const tokenRouter = require("./src/routes/token.route");
 const homeRouter = require("./src/routes/home.route");
 const handleUserAuthentication = require("./src/middlewares/user-auth.middleware");
 const express = require("express");
@@ -38,6 +39,7 @@ app.use("/auth", authRouter);
 app.use(handleUserAuthentication);
 
 // Protected routes (auth required)
+app.use("/api/token", tokenRouter); // token endpoint for client-side
 app.use("/", homeRouter);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
