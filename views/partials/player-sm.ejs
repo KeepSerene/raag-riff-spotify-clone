@@ -1,7 +1,7 @@
 <div class="player-sm hide" data-player>
   <div class="track-info">
-    <figure class="figure-img track-banner" data-track-banner>
-      <img src="" alt="" class="cover-img" />
+    <figure class="figure-img track-banner">
+      <img src="" alt="" class="cover-img" data-track-banner />
     </figure>
 
     <div style="min-width: 0">
@@ -11,8 +11,8 @@
     </div>
   </div>
 
-  <%- include("../partials/play-btn.ejs", { dataAttr: "data-player-control-play"
-  }) %>
+  <%- include("../partials/play-btn.ejs", { dataAttr: "data-player-play-btn" })
+  %>
 
   <progress class="progress" data-player-sm-progress></progress>
 

@@ -65,4 +65,30 @@ async function transferPlayback(deviceId, shouldPlay = false) {
   }
 }
 
-export { BASE_URL, getAccessToken, getHeaders, transferPlayback };
+/**
+ * Start a new context or resume current playback on the user's active device.
+ * Only works with Spotify Premium.
+ *
+ * @param {string} deviceId - Current user device ID
+ * @param {Object} reqBody - The request body
+ * @returns {Promise<void>}
+ */
+async function play(deviceId, reqBody) {
+  try {
+    const headers = await getHeaders();
+    const response = await fetch(
+      `${BASE_URL}/me/player/play?device_id=${deviceId}`,
+      {
+        headers,
+        method: "PUT",
+        body: JSON.stringify(reqBody),
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error playing track:", error);
+  }
+}
+
+export { BASE_URL, getAccessToken, getHeaders, transferPlayback, play };
