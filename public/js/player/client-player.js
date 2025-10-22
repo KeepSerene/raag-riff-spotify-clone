@@ -8,7 +8,7 @@
 // Docs: https://developer.spotify.com/documentation/web-playback-sdk/tutorials/getting-started
 
 import { getAccessToken, play, transferPlayback } from "./client-player-api.js";
-import { addEventListenersToElems } from "../utils.js";
+import { addEventListenersToElems, formatTimestamp } from "../utils.js";
 
 const $players = document.querySelectorAll("[data-player]");
 
@@ -89,6 +89,44 @@ function updateDocumentTitle(playerState) {
     : `${trackName} • ${artistNamesStr} | RaagRiff`;
 }
 
+const $largePlayerProgressEl = document.querySelector(
+  "[data-player-lg-progress]"
+);
+const $largePlayerTrackCurrentPos = document.querySelector(
+  "[data-player-lg-track-current-pos]"
+);
+const $largePlayerTrackDuration = document.querySelector(
+  "[data-player-lg-track-duration]"
+);
+const $smallPlayerProgressEl = document.querySelector(
+  "[data-player-sm-progress]"
+);
+let /** { NodeJS.Timeout | undefined } */ trackLastProgressIntervalId;
+
+function updatePlayerTrackProgress(playerState) {
+  const { paused, duration, position } = playerState;
+  let trackCurrentPosition = position;
+  $largePlayerProgressEl.max = duration;
+  $smallPlayerProgressEl.max = duration;
+  $largePlayerProgressEl.value = trackCurrentPosition;
+  $smallPlayerProgressEl.value = trackCurrentPosition;
+  $largePlayerTrackCurrentPos.innerText = formatTimestamp(trackCurrentPosition);
+  $largePlayerTrackDuration.innerText = formatTimestamp(duration);
+  trackLastProgressIntervalId && clearInterval(trackLastProgressIntervalId);
+
+  // update progress every second if playing
+  if (!paused) {
+    const trackCurrentProgressIntervalId = setInterval(() => {
+      trackCurrentPosition += 1000;
+      $largePlayerProgressEl.value = trackCurrentPosition;
+      $smallPlayerProgressEl.value = trackCurrentPosition;
+      $largePlayerTrackCurrentPos.innerText =
+        formatTimestamp(trackCurrentPosition);
+    }, 1000);
+    trackLastProgressIntervalId = trackCurrentProgressIntervalId;
+  }
+}
+
 async function togglePlay(player) {
   const deviceId = localStorage.getItem("device_id");
   const {
@@ -114,12 +152,13 @@ async function togglePlay(player) {
 }
 
 function handlePlayerStateChange(playerState) {
-  const { track_window } = playerState;
+  // const { track_window } = playerState;
   console.log("Player state:", playerState);
   $players.forEach(($player) => updatePlayerUI($player, playerState));
   updateCardPlayBtnState(playerState); // play or pause
   $players.forEach(($player) => updatePlayerPlayBtnState($player, playerState)); // play or pause
   updateDocumentTitle(playerState); // when playing a track update the document title
+  updatePlayerTrackProgress(playerState); // update track progress
 }
 
 window.onSpotifyWebPlaybackSDKReady = async () => {
