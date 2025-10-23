@@ -50,6 +50,37 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   color: var(--on-surface-variant);
 }
 
+/* Custom scrollbar styles */
+.custom-scrollbar {
+  scrollbar-width: thin;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: var(--surface-container-highest);
+}
+
+/* Page styles */
+.page {
+  height: 100vh;
+  height: 100dvh;
+  padding-inline: var(--space-4);
+  padding-top: var(--top-bar-height);
+  padding-bottom: calc(
+    var(--bottom-nav-height) + var(--player-sm-height) + var(--space-4)
+  );
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 /* Screen reader only element styles */
 .sr-only {
   width: 1px;
@@ -151,8 +182,11 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 
 .card-text {
   color: var(--on-surface-variant);
-  text-transform: capitalize;
   opacity: 0.8;
+}
+
+.artist-card .card-text {
+  text-transform: capitalize;
 }
 
 /* Button styles */
@@ -173,6 +207,109 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   color: var(--on-surface-variant);
   height: 28px;
   padding-inline: var(--space-3);
+}
+
+/* List item styles */
+.list-item {
+  --state-layer-bg: var(--on-surface-variant);
+
+  height: 72px;
+  color: var(--on-surface-variant);
+  padding-inline: var(--space-4);
+  padding-block: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.item-number,
+.item-album {
+  display: none;
+}
+
+.list-item .item-banner {
+  position: relative;
+}
+
+.list-item :where(.item-banner, .item-number)::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background-image: url("/images/playing.gif");
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.list-item .item-banner::before {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.list-item:not(:has(.item-banner)):has(.play-btn.active) .item-number {
+  color: transparent;
+}
+
+.list-item:has(.play-btn.active) .item-banner::before,
+.list-item:not(:has(.item-banner)):has(.play-btn.active) .item-number::before {
+  opacity: 1;
+}
+
+.list-item .figure-img {
+  width: 56px;
+  height: 56px;
+  transition: opacity var(--tr-duration-short-2) var(--tr-easing-standard);
+}
+
+.list-item:where(:hover, :focus-visible, :has(.play-btn.active)) .figure-img {
+  opacity: 0.1;
+}
+
+.list-item .play-btn {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+.list-item:where(:hover, :focus-visible) .play-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.list-item .item-content {
+  flex-grow: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.list-item .item-title {
+  color: var(--on-surface);
+}
+
+.list-item:has(.play-btn.active) .item-title {
+  color: var(--primary);
+}
+
+.list-item .item-text {
+  opacity: 0.8;
+}
+
+.list-item .item-link {
+  position: absolute;
+  inset: 0;
+}
+
+.list-item .trailing-text {
+  text-align: right;
 }
 
 /* Utility styles */
@@ -247,5 +384,53 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 
   to {
     scale: 2.5;
+  }
+}
+
+/* Responsiveness for screen sizes >= 768px */
+@media screen and (width >= 48em) {
+  body {
+    background-color: var(--surface);
+    padding: var(--space-2);
+    padding-left: calc(var(--navigation-rail-width) + var(--space-4));
+    padding-bottom: var(--player-lg-height);
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .page {
+    height: auto;
+    background-color: var(--background);
+    border-radius: var(--radius-large);
+    padding-block: 0 var(--space-4);
+  }
+}
+
+/* Responsiveness for screen sizes >= 992px */
+@media screen and (width >= 62em) {
+  .page {
+    padding-inline: var(--space-6);
+    padding-bottom: var(--space-6);
+  }
+
+  .section {
+    margin-top: var(--space-6);
+  }
+
+  .slider {
+    padding-inline: var(--space-6);
+    margin-inline: -24px;
+  }
+
+  .slider-inner {
+    gap: var(--space-4);
+  }
+}
+
+/* Responsiveness for screen sizes >= 1200px */
+@media screen and (width >= 75em) {
+  .slider .card {
+    min-width: 180px;
+    max-width: 180px;
   }
 }

@@ -74,6 +74,9 @@ function updatePlayerPlayBtnState($player, playerState) {
   $playerPlayBtn.setAttribute("data-play-btn", paused ? "paused" : "playing");
 }
 
+const $playerPrevTrackBtn = document.querySelector("[data-player-prev-btn]");
+const $playerNextTrackBtn = document.querySelector("[data-player-next-btn]");
+
 const initialDocumentTitle = document.title;
 
 function updateDocumentTitle(playerState) {
@@ -152,13 +155,16 @@ async function togglePlay(player) {
 }
 
 function handlePlayerStateChange(playerState) {
-  // const { track_window } = playerState;
-  console.log("Player state:", playerState);
+  const { track_window } = playerState;
+  // console.log("Player state:", playerState);
   $players.forEach(($player) => updatePlayerUI($player, playerState));
   updateCardPlayBtnState(playerState); // play or pause
   $players.forEach(($player) => updatePlayerPlayBtnState($player, playerState)); // play or pause
   updateDocumentTitle(playerState); // when playing a track update the document title
   updatePlayerTrackProgress(playerState); // update track progress
+  // disable previous and next track buttons conditionally
+  $playerPrevTrackBtn.disabled = track_window.previous_tracks.length === 0;
+  $playerNextTrackBtn.disabled = track_window.next_tracks.length === 0;
 }
 
 window.onSpotifyWebPlaybackSDKReady = async () => {
@@ -176,13 +182,28 @@ window.onSpotifyWebPlaybackSDKReady = async () => {
 
   // Add event listeners
   player.addListener("ready", ({ device_id }) => {
-    // console.log("Ready with Device ID", device_id);
-
     localStorage.setItem("device_id", device_id);
-    transferPlayback(device_id); // transfers playback to the current device
+
+    // transfers playback to the current device
+    transferPlayback(device_id);
+
     const $playBtns = document.querySelectorAll("[data-play-btn]");
     addEventListenersToElems($playBtns, "click", function () {
       togglePlay.call(this, player);
+    });
+
+    // skip to the previous track
+    $playerPrevTrackBtn.addEventListener("click", async () => {
+      await player.previousTrack();
+    });
+    // skip to the next track
+    $playerNextTrackBtn.addEventListener("click", async () => {
+      await player.nextTrack();
+    });
+
+    // handle seek
+    $largePlayerProgressEl.addEventListener("input", async function () {
+      await player.seek(this.value);
     });
   });
 

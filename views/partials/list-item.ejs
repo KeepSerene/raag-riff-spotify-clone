@@ -1,0 +1,66 @@
+<% const { width = 56, height = 56, url = "/images/track-banner.png" } =
+locals.images?.find(img => img.width < 200); %>
+
+<div class="list-item" title="<%= locals.title %>" data-ripple>
+  <% if (locals.trackNumber) { %>
+  <span class="item-number body-medium">
+    <!-- prettier-ignore -->
+    <%= locals.trackNumber %>
+
+    <% if(!locals.images) {  %>
+        <%- include("./play-btn.ejs", {
+            variant: "filled",
+            dataAttr: `data-track-uri=${locals.trackUri}`
+        }) %>
+    <% } %>
+  </span>
+  <% } %>
+
+  <!-- prettier-ignore -->
+  <% if (locals.images) { %>
+  <div class="item-banner">
+    <figure class="figure-img">
+      <img
+        src="<%= url %>"
+        alt="<%= locals.title %> banner"
+        width="<%= width %>"
+        height="<%= height %>"
+        loading="lazy"
+        class="cover-img"
+        data-lazy-loaded
+      />
+    </figure>
+
+    <%- include("./play-btn.ejs", { variant: "filled", dataAttr:
+    `data-track-uri=${locals.trackUri}` }) %>
+  </div>
+  <% } %>
+
+  <div class="item-content">
+    <div class="wrapper">
+      <h3 class="body-large item-title truncate"><%= locals.title %></h3>
+
+      <p class="body-medium item-text truncate"><%= locals.text %></p>
+    </div>
+
+    <!-- prettier-ignore -->
+    <% if (locals.albumName) { %>
+    <p class="item-album body-medium"><%= locals.albumName %></p>
+    <% } %>
+
+    <!-- prettier-ignore -->
+    <% if (locals.duration_ms) { %>
+    <p class="trailing-text label-small">
+      <%= formatTimestamp(locals.duration_ms) %>
+    </p>
+    <% } %>
+  </div>
+
+  <a
+    href="tracks/<%= locals.id %>"
+    aria-label="Click to visit <%= locals.title %> details page"
+    class="item-link"
+  ></a>
+
+  <div class="state-layer"></div>
+</div>

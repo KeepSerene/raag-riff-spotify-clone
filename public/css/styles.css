@@ -1,36 +1,7 @@
 @import url("./base.css");
 
-.page {
-  height: 100vh;
-  height: 100dvh;
-  padding-inline: var(--space-4);
-  padding-top: var(--top-bar-height);
-  padding-bottom: calc(
-    var(--bottom-nav-height) + var(--player-sm-height) + var(--space-4)
-  );
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
 .page:has(.player-sm.hide) {
   padding-bottom: calc(var(--bottom-nav-height) + var(--space-4));
-}
-
-.custom-scrollbar {
-  scrollbar-width: thin;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: 4px;
-}
-
-.custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background-color: var(--surface-container-highest);
 }
 
 .top-bar {
@@ -345,7 +316,7 @@
   overflow: hidden;
 }
 
-:where(.card) .play-btn {
+:where(.card, .list-item) .play-btn {
   box-shadow: var(--shadow-1);
   opacity: 0;
   visibility: hidden;
@@ -491,6 +462,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: var(--space-2);
 }
 
 .player-range-wrapper .player-range {
@@ -574,4 +546,270 @@
 
 .footer .copyright-year {
   display: inline;
+}
+
+.recent-tracks-sidebar {
+  display: none;
+}
+
+/* Responsiveness for screen sizes >= 768px */
+@media screen and (width >= 48em) {
+  .page:has(.player-sm.hide) {
+    padding-bottom: var(--space-4);
+  }
+
+  .top-bar {
+    margin-inline: -16px;
+    gap: var(--space-2);
+    position: sticky;
+  }
+
+  .header-hide .top-bar {
+    transform: translateY(0);
+  }
+
+  .top-bar > .icon-btn {
+    display: flex;
+  }
+
+  .search-bar {
+    max-width: 480px;
+    overflow: hidden;
+    position: static;
+  }
+
+  .search-bar .logo {
+    display: none;
+  }
+
+  .search-bar:has(.search-field:not(:placeholder-shown)) .menu-wrapper {
+    display: block;
+  }
+
+  .menu-wrapper {
+    position: absolute;
+    right: var(--space-4);
+  }
+
+  .search-bar .avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .bottom-nav {
+    max-width: var(--navigation-rail-width);
+    height: auto;
+    border-radius: var(--radius-large);
+    padding-block: var(--space-2);
+    box-shadow: none;
+    grid-template-columns: 1fr;
+    align-content: start;
+    gap: var(--space-4);
+    left: var(--space-2);
+    top: var(--space-2);
+    bottom: var(--player-lg-height);
+  }
+
+  .bottom-nav-item {
+    height: 56px;
+    padding: 0;
+    display: grid;
+    align-content: center;
+  }
+
+  .bottom-nav-item .icon-wrapper {
+    width: 56px;
+  }
+
+  .bottom-nav .logo {
+    display: grid;
+  }
+
+  .bottom-nav .logo .large {
+    display: none;
+  }
+
+  .player-sm,
+  .player-modal-overlay,
+  .player-lg .handle-wrapper {
+    display: none;
+  }
+
+  .player-lg {
+    height: var(--player-lg-height);
+    background-color: var(--surface);
+    padding: 0 var(--space-5);
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    align-content: center;
+    gap: var(--space-6);
+    visibility: visible;
+    top: auto;
+    bottom: 0;
+  }
+
+  .player-lg.active {
+    transform: unset;
+  }
+
+  .player-lg.disabled {
+    filter: grayscale(1);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .player-lg.disabled .track-info {
+    opacity: 0;
+  }
+
+  .player-lg .track-info {
+    gap: var(--space-4);
+  }
+
+  .player-lg .track-banner {
+    width: 64px;
+    height: 64px;
+  }
+
+  .player-lg .track-title {
+    font-size: var(--fs-title-small);
+    line-height: var(--lh-title-small);
+    letter-spacing: var(--ls-p-010);
+  }
+
+  .player-lg .track-text {
+    font-size: var(--fs-label-small);
+    line-height: var(--lh-label-small);
+    letter-spacing: var(--ls-p-050);
+  }
+
+  .player-controls {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .player-range-wrapper {
+    flex-wrap: nowrap;
+    max-width: 480px;
+    width: 100%;
+    padding-block: 0;
+  }
+
+  .progress-label,
+  .duration-label {
+    flex-shrink: 0;
+    width: 40px;
+    white-space: nowrap;
+  }
+
+  .progress-label {
+    text-align: right;
+  }
+
+  .player-range-wrapper .player-range {
+    order: unset;
+  }
+
+  .player-volume-controls {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+}
+
+/* Responsiveness for screen sizes >= 992px */
+@media screen and (width >= 62em) {
+  .page:has(.player-sm.hide) {
+    padding-inline: var(--space-6);
+    padding-bottom: var(--space-6);
+  }
+
+  .top-bar {
+    padding-inline: var(--space-6);
+    margin-inline: -24px;
+  }
+
+  .menu-wrapper {
+    right: var(--space-6);
+  }
+
+  .player-range-wrapper {
+    max-width: 860px;
+  }
+}
+
+/* Responsiveness for screen sizes >= 1200px */
+@media screen and (width >= 75em) {
+  .bottom-nav {
+    height: max-content;
+    border-radius: var(--radius-large);
+    padding: var(--space-3);
+    padding-top: 0;
+    gap: 0;
+  }
+
+  .bottom-nav .logo {
+    height: 72px;
+    padding-bottom: var(--space-2);
+  }
+
+  .bottom-nav .logo .large {
+    display: block;
+  }
+
+  .bottom-nav .logo :where(.small, .bottom-nav-text) {
+    display: none;
+  }
+
+  .bottom-nav-item {
+    border-radius: var(--radius-full);
+    padding-inline: var(--space-4) var(--space-6);
+    overflow: hidden;
+    grid-template-columns: max-content 1fr;
+    justify-items: start;
+    align-items: center;
+    gap: var(--space-3);
+    position: relative;
+  }
+
+  .bottom-nav-item .icon-wrapper {
+    all: unset;
+  }
+
+  .bottom-nav-text {
+    font-size: var(--fs-label-large);
+    line-height: var(--lh-label-large);
+    letter-spacing: var(--ls-p-010);
+  }
+
+  .recent-tracks-sidebar {
+    display: block;
+    width: var(--navigation-rail-width);
+    background-color: var(--surface-container);
+    border-radius: var(--radius-large);
+    padding: var(--space-3);
+    overflow-y: auto;
+    position: absolute;
+    bottom: var(--player-lg-height);
+    left: var(--space-2);
+    top: 324px;
+  }
+
+  .recent-tracks-sidebar .list-item .item-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .recent-tracks-sidebar-title {
+    color: var(--on-surface-variant);
+    padding: var(--space-4);
+  }
+
+  .recent-tracks-sidebar-text {
+    color: var(--on-surface-variant);
+    padding-inline: var(--space-4);
+    opacity: 0.8;
+  }
 }

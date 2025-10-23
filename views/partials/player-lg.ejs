@@ -18,7 +18,7 @@
   <div class="player-controls">
     <div class="player-range-wrapper">
       <span class="label-small progress-label" data-player-lg-track-current-pos>
-        --:--
+        0:00
       </span>
 
       <input
@@ -29,8 +29,8 @@
         data-player-lg-progress
       />
 
-      <span class="label-small progress-label" data-player-lg-track-duration>
-        --:--
+      <span class="label-small duration-label" data-player-lg-track-duration>
+        0:00
       </span>
     </div>
 
@@ -51,20 +51,20 @@
             dataAttr: "data-player-next-btn disabled"
         }) %>
     </div>
+  </div>
 
-    <div class="player-volume-controls">
-      <%- include("./icon-btn.ejs", { icon: "volume_up", dataAttr:
-      "data-volume-btn", }) %>
+  <div class="player-volume-controls">
+    <%- include("./icon-btn.ejs", { icon: "volume_up", dataAttr:
+    "data-volume-btn", }) %>
 
-      <input
-        type="range"
-        name="player-volume"
-        value="0"
-        max="100"
-        class="player-range"
-        data-volume-progress-bar
-      />
-    </div>
+    <input
+      type="range"
+      name="player-volume"
+      value="0"
+      max="100"
+      class="player-range"
+      data-volume-progress-bar
+    />
   </div>
 </div>
 

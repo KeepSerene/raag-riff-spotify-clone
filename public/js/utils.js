@@ -13,9 +13,8 @@ function addEventListenersToElems(elements, eventType, eventHandler) {
  * Formats a duration in milliseconds to a human-readable timestamp string.
  *
  * @param {number} milliseconds - The duration in milliseconds to format
- * @returns {string} Formatted timestamp in "mm:ss" or "hh:mm:ss" format.
+ * @returns {string} Formatted timestamp in "m:ss" or "h:mm:ss" format.
  *                   Hours are only included if duration is 1 hour or longer.
- *                   All components are zero-padded to 2 digits.
  */
 function formatTimestamp(milliseconds) {
   const totalSecs = Math.floor(milliseconds / 1000);
@@ -27,9 +26,9 @@ function formatTimestamp(milliseconds) {
 
   const pad = (num) => num.toString().padStart(2, "0");
 
-  if (hours >= 1) return `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+  if (hours >= 1) return `${hours}:${pad(mins)}:${pad(secs)}`;
 
-  return `${pad(mins)}:${pad(secs)}`;
+  return `${mins}:${pad(secs)}`;
 }
 
 export { addEventListenersToElems, formatTimestamp };

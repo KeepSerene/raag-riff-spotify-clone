@@ -150,3 +150,10 @@
   --player-lg-height: 96px;
   --navigation-rail-width: 80px;
 }
+
+/* Responsiveness for screen sizes >= 1200px */
+@media screen and (width >= 75em) {
+  :root {
+    --navigation-rail-width: 360px;
+  }
+}

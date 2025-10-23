@@ -6,6 +6,7 @@
 "use strict";
 
 const userApi = require("../api/user.api");
+const playerApi = require("../api/player.api");
 const albumsApi = require("../api/albums.api");
 const artistsApi = require("../api/artists.api");
 const newReleasesApi = require("../api/new-releases.api");
@@ -14,6 +15,11 @@ const playlistsApi = require("../api/playlists.api");
 async function handleHome(req, res) {
   try {
     const currentUserProfile = await userApi.fetchCurrentUserProfile(req);
+    const recentlyPlayedTracksInfo =
+      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
+      ({ track }) => track
+    );
     const recommendedAlbumsInfo = await albumsApi.getRecommendedAlbums(req);
     const recommendedAlbums = recommendedAlbumsInfo.items;
     const recommendedArtistIdEntries = recommendedAlbums.map(({ artists }) =>
@@ -36,6 +42,7 @@ async function handleHome(req, res) {
 
     res.render("./pages/home.ejs", {
       currentUserProfile,
+      recentlyPlayedTracks,
       recommendedAlbums,
       recommendedArtistsInfo,
       newReleases,
