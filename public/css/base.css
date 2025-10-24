@@ -312,6 +312,27 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   text-align: right;
 }
 
+/* Grid list styles */
+.grid-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-2);
+}
+
+/* Pagination controls styles */
+.pagination-controls {
+  color: var(--on-surface-variant);
+  margin-top: var(--space-4);
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.pagination-controls .controls-wrapper {
+  display: flex;
+}
+
 /* Utility styles */
 .section {
   margin-top: var(--space-4);
@@ -404,6 +425,10 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
     border-radius: var(--radius-large);
     padding-block: 0 var(--space-4);
   }
+
+  .grid-list {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
 }
 
 /* Responsiveness for screen sizes >= 992px */
@@ -422,7 +447,8 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
     margin-inline: -24px;
   }
 
-  .slider-inner {
+  .slider-inner,
+  .grid-list {
     gap: var(--space-4);
   }
 }

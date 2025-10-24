@@ -1,0 +1,41 @@
+.category-card {
+  height: 120px;
+}
+
+.category-card .card-banner {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  right: -16px;
+  bottom: -10px;
+  z-index: -1;
+  transform: rotate(30deg);
+}
+
+.category-card .card-content {
+  padding-right: 80px;
+}
+
+.category-card .card-title {
+  text-overflow: unset;
+  white-space: normal;
+  overflow: unset;
+  overflow-wrap: break-word;
+}
+
+/* Responsiveness for screen sizes >= 768px */
+@media screen and (width >= 48em) {
+  .category-card {
+    height: 200px;
+  }
+
+  .category-card .card-banner {
+    width: 150px;
+    height: 150px;
+    bottom: -24px;
+  }
+
+  .category-card .card-content {
+    padding-right: var(--space-4);
+  }
+}

@@ -58,6 +58,7 @@ async function handleHome(req, res) {
         "Home handler - 401 error, clearing cookies and redirecting to auth"
       );
       res.clearCookie("access_token");
+
       return res.redirect(
         `/auth/refresh_tokens?redirect_to=${encodeURIComponent(
           req.originalUrl
@@ -68,6 +69,7 @@ async function handleHome(req, res) {
     // For other errors, redirect to login
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
+
     return res.redirect("/login");
   }
 }

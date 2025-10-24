@@ -130,7 +130,7 @@ function updatePlayerTrackProgress(playerState) {
   }
 }
 
-async function togglePlay(player) {
+async function handlePlayState(player) {
   const deviceId = localStorage.getItem("device_id");
   const {
     context: { uri: currentUri },
@@ -141,9 +141,10 @@ async function togglePlay(player) {
   const { uri, trackUri, playBtn } = this.dataset; // "this" points to a play button element
 
   if (playBtn === "paused") {
-    const isLastPlayed = currentUri === uri || currentTrackUri === trackUri;
+    const isCurrentlyPlaying =
+      currentUri === uri || currentTrackUri === trackUri;
 
-    if ((!uri && !trackUri) || isLastPlayed) return await player.resume();
+    if ((!uri && !trackUri) || isCurrentlyPlaying) return await player.resume();
 
     const reqBody = {};
     uri && (reqBody.context_uri = uri);
@@ -167,9 +168,36 @@ function handlePlayerStateChange(playerState) {
   $playerNextTrackBtn.disabled = track_window.next_tracks.length === 0;
 }
 
+const $volumeProgressEl = document.querySelector("[data-volume-progress]");
+const $volumeBtn = document.querySelector("[data-volume-btn]");
+
+/**
+ * Sets the speaker icon based on the current volume level.
+ * @param {number} volume - The volume level, ranging from 0 to 100.
+ * @returns {void}
+ */
+function setSpeakerIcon(volume) {
+  const iconName =
+    volume > 66
+      ? "volume_up"
+      : volume > 33
+      ? "volume_down"
+      : volume > 0
+      ? "volume_mute"
+      : "volume_off";
+  $volumeBtn.innerText = iconName;
+}
+
+async function handleVolumeChange(player) {
+  const vol = this.value; // "this" points to "$volumeProgressEl"
+  setSpeakerIcon(vol);
+  await player.setVolume(vol / 100);
+  localStorage.setItem("volume", vol);
+}
+
 window.onSpotifyWebPlaybackSDKReady = async () => {
   const token = await getAccessToken();
-  const volume = localStorage.getItem("volume") ?? 100;
+  const volume = localStorage.getItem("volume") ?? 100; // lies in [0, 100]
 
   // Create an instance of the web player SDK
   const player = new Spotify.Player({
@@ -189,7 +217,7 @@ window.onSpotifyWebPlaybackSDKReady = async () => {
 
     const $playBtns = document.querySelectorAll("[data-play-btn]");
     addEventListenersToElems($playBtns, "click", function () {
-      togglePlay.call(this, player);
+      handlePlayState.call(this, player);
     });
 
     // skip to the previous track
@@ -205,9 +233,21 @@ window.onSpotifyWebPlaybackSDKReady = async () => {
     $largePlayerProgressEl.addEventListener("input", async function () {
       await player.seek(this.value);
     });
+
+    // handle volume change
+    $volumeProgressEl.addEventListener(
+      "input",
+      handleVolumeChange.bind($volumeProgressEl, player)
+    );
   });
 
   player.addListener("player_state_changed", handlePlayerStateChange);
+
+  player.getVolume().then((volume) => {
+    // "volume" lies in [0, 1]
+    $volumeProgressEl.value = volume * 100;
+    setSpeakerIcon(volume * 100);
+  });
 
   player.addListener("not_ready", ({ device_id }) => {
     console.log("Device ID has gone offline", device_id);

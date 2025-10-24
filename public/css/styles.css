@@ -39,7 +39,7 @@
   align-items: center;
 }
 
-.icon-btn:disabled {
+.icon-btn:where(:disabled, [disabled]) {
   opacity: 0.38;
   pointer-events: none;
 }

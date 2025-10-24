@@ -163,3 +163,12 @@ function togglePlayerModal() {
 
 $playerModalTogglers &&
   addEventListenersToElems($playerModalTogglers, "click", togglePlayerModal);
+
+/**
+ * Session history back and forward navigation
+ */
+const historyBackBtn = document.querySelector("[data-history-back-btn]");
+const historyForwardBtn = document.querySelector("[data-history-forward-btn]");
+
+historyBackBtn?.addEventListener("click", () => window.history.back());
+historyForwardBtn?.addEventListener("click", () => window.history.forward());

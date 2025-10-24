@@ -1,0 +1,31 @@
+<nav
+  role="navigation"
+  aria-label="Pagination navigation"
+  class="pagination-controls"
+>
+  <p class="body-medium">
+    Page <%= `${locals.page} of ${Math.ceil(locals.total / locals.limit)}` %>
+  </p>
+
+  <div class="controls-wrapper">
+    <a
+      href="<%= `${locals.baseUrl}/page/${+locals.page - 1}` %>"
+      class="icon-btn"
+      <%= locals.previous ? "" : "disabled" %>
+      data-ripple
+    >
+      <span class="material-symbols-rounded">chevron_left</span>
+      <div class="state-layer"></div>
+    </a>
+
+    <a
+      href="<%= `${locals.baseUrl}/page/${+locals.page + 1}` %>"
+      class="icon-btn"
+      <%= locals.next ? "" : "disabled" %>
+      data-ripple
+    >
+      <span class="material-symbols-rounded">chevron_right</span>
+      <div class="state-layer"></div>
+    </a>
+  </div>
+</nav>

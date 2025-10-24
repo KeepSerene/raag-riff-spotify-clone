@@ -229,7 +229,7 @@ async function getCategoryPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
     // Determine if there's a next page
     const hasNextPage = offset + itemLimit < totalPlaylists;
     const nextPageUrl = hasNextPage
-      ? `${req.baseUrl}/${categoryId}?page=${parseInt(currentPage) + 1}`
+      ? `${req.baseUrl}/${categoryId}/page/${parseInt(currentPage) + 1}`
       : null;
 
     return {
