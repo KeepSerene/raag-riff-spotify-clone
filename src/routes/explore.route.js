@@ -12,7 +12,10 @@ const {
   handleExploreSingleCat,
 } = require("../controllers/explore.controller");
 
-router.get(["/", "/page/:page"], handleExplore);
-router.get("/:categoryId", handleExploreSingleCat);
+router.get(["/", "/pages/:page"], handleExplore); // multiple categories
+router.get(
+  ["/:categoryId", "/:categoryId/pages/:page"],
+  handleExploreSingleCat
+); // single category
 
 module.exports = router;

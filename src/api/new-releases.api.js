@@ -16,7 +16,6 @@ async function getNewReleasesWithPagination(
   itemLimit = apiConfig.LOWER_LIMIT
 ) {
   const offset = calculateOffset(req.params, itemLimit);
-
   const {
     data: { albums: newReleases },
   } = await getApiResponse(
@@ -31,4 +30,14 @@ async function getNewReleasesWithPagination(
   };
 }
 
-module.exports = { getNewReleasesWithPagination };
+async function getAlbumInfo(req) {
+  const { albumId } = req.params;
+  const { data: albumInfo } = await getApiResponse(
+    `/albums/${albumId}`,
+    req.cookies.access_token
+  );
+
+  return albumInfo;
+}
+
+module.exports = { getNewReleasesWithPagination, getAlbumInfo };

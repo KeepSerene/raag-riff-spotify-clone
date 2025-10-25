@@ -140,12 +140,6 @@ $bottomNavItems &&
   addEventListenersToElems($bottomNavItems, "click", handleActiveBottomNavItem);
 
 /**
- * Copyright year
- */
-const $copyrightYearSpan = document.querySelector("[data-copyright-year]");
-$copyrightYearSpan.innerText = new Date().getFullYear().toString();
-
-/**
  * Player modal toggle
  */
 const $playerModal = document.querySelector("[data-player-modal]");

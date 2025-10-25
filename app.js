@@ -13,6 +13,7 @@ const authRouter = require("./src/routes/auth.route");
 const tokenRouter = require("./src/routes/token.route");
 const homeRouter = require("./src/routes/home.route");
 const exploreRouter = require("./src/routes/explore.route");
+const albumsRouter = require("./src/routes/albums.route");
 const handleUserAuthentication = require("./src/middlewares/user-auth.middleware");
 
 const app = express();
@@ -43,5 +44,6 @@ app.use(handleUserAuthentication);
 app.use("/api/token", tokenRouter); // access token endpoint for client-side
 app.use("/", homeRouter);
 app.use("/explore", exploreRouter);
+app.use("/albums", albumsRouter);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

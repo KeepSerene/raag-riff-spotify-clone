@@ -1,0 +1,71 @@
+<% const { items: albumItems } = locals.albums %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../layouts/head.ejs", { title: `${locals.title} | RaagRiff` })
+    %>
+  </head>
+
+  <body>
+    <main class="page custom-scrollbar" data-page>
+      <!-- Topbar -->
+      <%- include("../partials/top-bar.ejs", locals.currentUserProfile) %>
+
+      <article class="main" data-main>
+        <section class="section">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title"><%= locals.title %></h2>
+          </div>
+
+          <div class="grid-list">
+            <!-- prettier-ignore -->
+            <% albumItems.forEach(({ id, name: title, images, album_type, release_date, artists, uri }) => { %>
+                <%
+                    let year, text;
+                    
+                    if (locals.isArtistAlbum) {
+                        year = new Date(release_date).getFullYear();
+                        text = album_type;
+                    } else {
+                        text = artists.map(({ name }) => name).join(", ");
+                    }
+
+                    const img300x300 = images.find(img => img.width === 300);
+                %>
+
+                <%- include("../partials/card.ejs", {
+                    type: "album",
+                    title,
+                    text,
+                    year,
+                    image: img300x300,
+                    link: `/albums/${id}`,
+                    uri
+                }) %>
+            <% }) %>
+          </div>
+
+          <!-- Pagination controls -->
+          <%- include("../partials/pagination-controls.ejs", locals.albums) %>
+        </section>
+      </article>
+
+      <!-- Music player small -->
+      <%- include("../partials/player-sm.ejs") %>
+
+      <!-- Music player large (modal view) -->
+      <%- include("../partials/player-lg.ejs") %>
+
+      <!-- Footer -->
+      <%- include("../layouts/footer.ejs") %>
+
+      <!-- Bottom navigation -->
+      <%- include("../partials/bottom-nav.ejs", { currentRoute: "/albums" }) %>
+    </main>
+
+    <!-- Recently played tracks sidebar -->
+    <%- include("../layouts/recent-tracks-sidebar.ejs", { recentTracks:
+    locals.recentlyPlayedTracks }) %>
+  </body>
+</html>

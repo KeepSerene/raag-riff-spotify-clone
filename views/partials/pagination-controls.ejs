@@ -9,7 +9,7 @@
 
   <div class="controls-wrapper">
     <a
-      href="<%= `${locals.baseUrl}/page/${+locals.page - 1}` %>"
+      href="<%= `${locals.baseUrl}/pages/${+locals.page - 1}` %>"
       class="icon-btn"
       <%= locals.previous ? "" : "disabled" %>
       data-ripple
@@ -19,7 +19,7 @@
     </a>
 
     <a
-      href="<%= `${locals.baseUrl}/page/${+locals.page + 1}` %>"
+      href="<%= `${locals.baseUrl}/pages/${+locals.page + 1}` %>"
       class="icon-btn"
       <%= locals.next ? "" : "disabled" %>
       data-ripple

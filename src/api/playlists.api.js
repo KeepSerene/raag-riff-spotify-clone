@@ -9,6 +9,7 @@ const apiConfig = require("../configs/api.config");
 const { getApiResponse } = require("../configs/axios.config");
 const { shuffleArray, getRandomItems, calculateOffset } = require("../utils");
 const playerApi = require("./player.api");
+const categoriesApi = require("./categories.api");
 
 /**
  * Get featured/recommended playlists based on user's listening history
@@ -19,109 +20,81 @@ const playerApi = require("./player.api");
  */
 async function getFeaturedPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
   try {
-    // Calculate offset for pagination support
     const offset = calculateOffset(req.params, itemLimit);
     const currentPage = req.params.page ?? 1;
 
-    // Get recently played tracks to understand user preferences
     const recentlyPlayedTracksInfo =
       await playerApi.getRecentlyPlayedTracksInfo(req, itemLimit);
 
-    // Extract unique genres, artists, and track characteristics
     const artistNames = [];
-    const trackNames = [];
     const artistSet = new Set();
 
     recentlyPlayedTracksInfo.items.forEach(({ track }) => {
-      // Collect unique artist names
       track.artists.forEach((artist) => {
         if (!artistSet.has(artist.id)) {
           artistSet.add(artist.id);
           artistNames.push(artist.name);
         }
       });
-
-      // Collect track names for keyword matching
-      if (track.name) {
-        trackNames.push(track.name);
-      }
     });
 
-    // Creating diverse search queries for variety
+    // Create diverse search queries for variety
     const searchQueries = [];
-
-    // Query 1: Search by top artists (take random 2-3 artists)
     const randomArtists = getRandomItems(artistNames, 3);
 
     if (randomArtists.length > 0) {
       searchQueries.push(randomArtists.join(" "));
     }
 
-    // Query 2: Generic mood-based playlists
     const moods = ["chill", "workout", "party", "focus", "relax", "energy"];
-    const randomMood = moods[Math.floor(Math.random() * moods.length)];
-    searchQueries.push(randomMood);
+    searchQueries.push(moods[Math.floor(Math.random() * moods.length)]);
 
-    // Query 3: Genre-based search (popular genres)
     const genres = ["pop", "rock", "hip hop", "electronic", "indie", "jazz"];
-    const randomGenre = genres[Math.floor(Math.random() * genres.length)];
-    searchQueries.push(randomGenre);
+    searchQueries.push(genres[Math.floor(Math.random() * genres.length)]);
 
     // Fetch playlists from multiple search queries
     const allPlaylists = [];
     const playlistIds = new Set();
 
     for (const query of searchQueries) {
-      try {
-        const { data: searchResults } = await getApiResponse(
-          `/search?q=${encodeURIComponent(
-            query
-          )}&type=playlist&limit=20&market=${apiConfig.MARKET}`,
-          req.cookies.access_token
-        );
+      const { data: searchResults } = await getApiResponse(
+        `/search?q=${encodeURIComponent(query)}&type=playlist&limit=20&market=${
+          apiConfig.MARKET
+        }`,
+        req.cookies.access_token
+      );
 
-        // Filter out null/undefined playlists and duplicates
-        searchResults.playlists.items.forEach((playlist) => {
-          if (
-            playlist &&
-            playlist.id &&
-            !playlistIds.has(playlist.id) &&
-            playlist.tracks &&
-            playlist.tracks.total > 0
-          ) {
-            playlistIds.add(playlist.id);
-            allPlaylists.push(playlist);
-          }
-        });
-      } catch (error) {
-        console.error(
-          `Error searching playlists for query "${query}":`,
-          error.message
-        );
-        // continue with other queries even if one fails
-      }
+      searchResults.playlists.items.forEach((playlist) => {
+        if (
+          playlist &&
+          playlist.id &&
+          !playlistIds.has(playlist.id) &&
+          playlist.tracks &&
+          playlist.tracks.total > 0
+        ) {
+          playlistIds.add(playlist.id);
+          allPlaylists.push(playlist);
+        }
+      });
     }
 
-    // Sort by popularity (follower count) and shuffle for randomness
+    // Sort by popularity and shuffle for randomness
     const sortedPlaylists = allPlaylists.sort((a, b) => {
       const followersA = a.tracks?.total || 0;
       const followersB = b.tracks?.total || 0;
-
       return followersB - followersA;
     });
 
-    // applying shuffling to top results for fresh recommendations on page refresh
     const topPlaylists = sortedPlaylists.slice(0, itemLimit * 3);
     const shuffledPlaylists = shuffleArray(topPlaylists);
 
-    // applying pagination to the shuffled results
+    // Apply pagination
     const totalPlaylists = shuffledPlaylists.length;
     const paginatedPlaylists = shuffledPlaylists.slice(
       offset,
       offset + itemLimit
     );
 
-    // determine if there's a next page
     const hasNextPage = offset + itemLimit < totalPlaylists;
     const nextPageUrl = hasNextPage
       ? `${req.baseUrl}?page=${parseInt(currentPage) + 1}`
@@ -139,7 +112,7 @@ async function getFeaturedPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
       },
     };
   } catch (error) {
-    console.error("Error retrieving featured playlists:", error);
+    console.error("Error retrieving featured playlists:", error.message);
     throw error;
   }
 }
@@ -153,14 +126,10 @@ async function getFeaturedPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
  */
 async function getCategoryPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
   try {
-    // Extract category from params with default value
     const categoryId = req.params.categoryId ?? "toplists";
-
-    // Calculate offset for pagination support
     const offset = calculateOffset(req.params, itemLimit);
     const currentPage = req.params.page ?? 1;
 
-    // Map category IDs to search-friendly terms
     const categorySearchTerms = {
       toplists: "top hits popular charts",
       pop: "pop music",
@@ -184,10 +153,17 @@ async function getCategoryPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
       gaming: "gaming",
     };
 
-    // Get search term for the category, fallback to category ID itself
-    const searchQuery = categorySearchTerms[categoryId] || categoryId;
+    let searchQuery = categorySearchTerms[categoryId] || categoryId;
 
-    // Fetch playlists using search API with increased limit for better filtering
+    // Use category name from API if available
+    if (req.params.categoryId) {
+      const catDetails = await categoriesApi.getSingleBrowseCategory(req);
+      if (catDetails && catDetails.name) {
+        searchQuery = catDetails.name;
+      }
+    }
+
+    // Fetch playlists using search API
     const { data: searchResults } = await getApiResponse(
       `/search?q=${encodeURIComponent(
         searchQuery
@@ -195,7 +171,6 @@ async function getCategoryPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
       req.cookies.access_token
     );
 
-    // Filter and collect valid playlists
     const allPlaylists = [];
     const playlistIds = new Set();
 
@@ -212,10 +187,11 @@ async function getCategoryPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
       }
     });
 
-    // Sort by popularity (track count and implicit popularity)
+    // Sort by popularity
     const sortedPlaylists = allPlaylists.sort((a, b) => {
       const tracksA = a.tracks?.total || 0;
       const tracksB = b.tracks?.total || 0;
+
       return tracksB - tracksA;
     });
 
@@ -226,29 +202,29 @@ async function getCategoryPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
       offset + itemLimit
     );
 
-    // Determine if there's a next page
     const hasNextPage = offset + itemLimit < totalPlaylists;
     const nextPageUrl = hasNextPage
-      ? `${req.baseUrl}/${categoryId}/page/${parseInt(currentPage) + 1}`
+      ? `${req.baseUrl}${req.params.categoryId ? `/${categoryId}` : ""}/pages/${
+          parseInt(currentPage) + 1
+        }`
       : null;
 
     return {
-      baseUrl: `${req.baseUrl}/${categoryId}`,
+      baseUrl: req.params.categoryId
+        ? `${req.baseUrl}/${categoryId}`
+        : req.baseUrl,
       page: currentPage,
       categoryId,
       playlists: {
         items: paginatedPlaylists,
         total: totalPlaylists,
         limit: itemLimit,
-        offset: offset,
+        offset,
         next: nextPageUrl,
       },
     };
   } catch (error) {
-    console.error(
-      `Error retrieving category playlists for "${req.params.categoryId}":`,
-      error
-    );
+    console.error(`Error retrieving category playlists:`, error.message);
     throw error;
   }
 }

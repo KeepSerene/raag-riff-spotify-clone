@@ -11,7 +11,7 @@ const apiConfig = require("../configs/api.config");
 const { shuffleArray } = require("../utils");
 
 /**
- * Get recommended ALBUMS based on recently played tracks & Spotify Search API
+ * Get recommended albums based on recently played tracks & Spotify Search API
  * @param {Object} req - Express request object.
  * @param {number} itemLimit - Number of items to be returned. Default is 12.
  * @returns {Promise<Object>}
@@ -20,13 +20,11 @@ async function getRecommendedAlbums(req, itemLimit = apiConfig.LOWER_LIMIT) {
   try {
     const recentlyPlayedTracksInfo =
       await playerApi.getRecentlyPlayedTracksInfo(req, itemLimit);
-    // Extract unique artists and albums from recently played
     const recentArtists = [];
-    const recentAlbumIds = new Set(); // tracking album IDs to avoid duplicates
+    const recentAlbumIds = new Set();
     const artistSet = new Set();
 
     recentlyPlayedTracksInfo.items.forEach(({ track }) => {
-      // Collect unique artist names
       track.artists.forEach((artist) => {
         if (!artistSet.has(artist.id)) {
           artistSet.add(artist.id);
@@ -34,56 +32,71 @@ async function getRecommendedAlbums(req, itemLimit = apiConfig.LOWER_LIMIT) {
         }
       });
 
-      // Track recently played album IDs to filter them out later
       if (track.album && track.album.id) {
         recentAlbumIds.add(track.album.id);
       }
     });
 
     const topArtists = recentArtists.slice(0, 5);
-    console.log("Top artists", topArtists);
-
-    const searchQuery = topArtists
-      .map((name) => `artist:"${name}"`)
-      .join(" OR ");
-
-    // Search for albums
-    const { data: searchResults } = await getApiResponse(
-      `/search?q=${encodeURIComponent(searchQuery)}&type=album&limit=${
-        itemLimit * 2 // larger search pool
-      }&market=${apiConfig.MARKET}`,
-      req.cookies.access_token
-    );
-    console.log("Search results", searchResults);
-
-    // track unique albums only
-    const uniqueAlbums = [];
+    // Search each artist individually for better results
+    const allAlbums = [];
     const seenAlbumIds = new Set(recentAlbumIds);
-    searchResults.albums.items.forEach((album) => {
-      if (!seenAlbumIds.has(album.id)) {
-        seenAlbumIds.add(album.id);
-        uniqueAlbums.push(album);
+
+    for (const artistName of topArtists) {
+      const searchQuery = `artist:"${artistName}"`;
+
+      const { data: searchResults } = await getApiResponse(
+        `/search?q=${encodeURIComponent(
+          searchQuery
+        )}&type=album&limit=10&market=${apiConfig.MARKET}`,
+        req.cookies.access_token
+      );
+
+      searchResults.albums.items.forEach((album) => {
+        if (album && album.id && !seenAlbumIds.has(album.id)) {
+          seenAlbumIds.add(album.id);
+          allAlbums.push(album);
+        }
+      });
+
+      // Early exit if we have plenty of albums
+      if (allAlbums.length >= itemLimit * 3) {
+        console.log(`Collected ${allAlbums.length} albums, stopping search`);
+        break;
       }
-    });
-    // Sort by release date to get newest first
-    const sortedAlbums = uniqueAlbums.sort((a, b) => {
+    }
+
+    // Sort by release date (newest first), shuffle, and select final albums
+    const sortedAlbums = allAlbums.sort((a, b) => {
       const dateA = new Date(a.release_date);
       const dateB = new Date(b.release_date);
-
       return dateB - dateA;
     });
-    // adding randomness to make recommendations feel fresh on page refresh
+
     const shuffledAlbums = shuffleArray(sortedAlbums);
-    // taking a random subset that includes both recent and older albums
     const finalAlbums = shuffledAlbums.slice(0, itemLimit);
 
     return {
-      ...searchResults.albums,
       items: finalAlbums,
+      total: finalAlbums.length,
+      limit: itemLimit,
+      href: "",
+      next: null,
+      offset: 0,
+      previous: null,
     };
   } catch (error) {
-    console.error("Error retrieving recommended albums:", error);
-    throw error;
+    console.error("Error retrieving recommended albums:", error.message);
+
+    return {
+      items: [],
+      total: 0,
+      limit: itemLimit,
+      href: "",
+      next: null,
+      offset: 0,
+      previous: null,
+    };
   }
 }
 

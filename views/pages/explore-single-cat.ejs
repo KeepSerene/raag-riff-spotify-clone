@@ -40,6 +40,10 @@
               <% } %>
             <% }) %>
           </div>
+
+          <!-- Pagination controls -->
+          <%- include("../partials/pagination-controls.ejs", { baseUrl, page,
+          ...locals.catPlaylistsInfo.playlists }) %>
         </section>
       </article>
 
@@ -53,7 +57,7 @@
       <%- include("../layouts/footer.ejs") %>
 
       <!-- Bottom navigation -->
-      <%- include("../partials/bottom-nav.ejs", { currentRoute: "/explore" }) %>
+      <%- include("../partials/bottom-nav.ejs") %>
     </main>
 
     <!-- Recently played tracks sidebar -->

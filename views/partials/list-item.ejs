@@ -1,5 +1,5 @@
 <% const { width = 56, height = 56, url = "/images/track-banner.png" } =
-locals.images?.find(img => img.width < 200); %>
+locals.images?.find(img => img?.width < 200) ?? {}; %>
 
 <div class="list-item" title="<%= locals.title %>" data-ripple>
   <% if (locals.trackNumber) { %>
