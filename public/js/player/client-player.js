@@ -7,7 +7,13 @@
 
 // Docs: https://developer.spotify.com/documentation/web-playback-sdk/tutorials/getting-started
 
-import { getAccessToken, play, transferPlayback } from "./client-player-api.js";
+import {
+  getAccessToken,
+  play,
+  transferPlayback,
+  // skipToPrevious,
+  // skipToNext,
+} from "./client-player-api.js";
 import { addEventListenersToElems, formatTimestamp } from "../utils.js";
 
 const $players = document.querySelectorAll("[data-player]");
@@ -168,7 +174,7 @@ function handlePlayerStateChange(playerState) {
 }
 
 const $volumeProgressEl = document.querySelector("[data-volume-progress]");
-const $volumeBtn = document.querySelector("[data-volume-btn]");
+const $volumeBtnIcon = document.querySelector("[data-volume-btn].icon");
 
 /**
  * Sets the speaker icon based on the current volume level.
@@ -184,7 +190,7 @@ function setSpeakerIcon(volume) {
       : volume > 0
       ? "volume_mute"
       : "volume_off";
-  $volumeBtn.innerText = iconName;
+  $volumeBtnIcon.innerText = iconName;
 }
 
 async function handleVolumeChange(player) {
@@ -222,10 +228,12 @@ window.onSpotifyWebPlaybackSDKReady = async () => {
     // skip to the previous track
     $playerPrevTrackBtn.addEventListener("click", async () => {
       await player.previousTrack();
+      // await skipToPrevious();
     });
     // skip to the next track
     $playerNextTrackBtn.addEventListener("click", async () => {
       await player.nextTrack();
+      // await skipToNext();
     });
 
     // handle seek

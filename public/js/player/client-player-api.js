@@ -91,4 +91,46 @@ async function play(deviceId, reqBody) {
   }
 }
 
-export { BASE_URL, getAccessToken, getHeaders, transferPlayback, play };
+/**
+ * Skip to the next track in the user's queue.
+ * Only works with Spotify Premium.
+ * @returns {Promise<void>}
+ */
+async function skipToNext() {
+  try {
+    const headers = await getHeaders();
+    await fetch(`${BASE_URL}/me/player/next`, {
+      headers,
+      method: "POST",
+    });
+  } catch (error) {
+    console.error("Error skipping to next track:", error);
+  }
+}
+
+/**
+ * Skip to the previous track in the user's queue.
+ * Only works with Spotify Premium.
+ * @returns {Promise<void>}
+ */
+async function skipToPrevious() {
+  try {
+    const headers = await getHeaders();
+    await fetch(`${BASE_URL}/me/player/previous`, {
+      headers,
+      method: "POST",
+    });
+  } catch (error) {
+    console.error("Error skipping to previous track:", error);
+  }
+}
+
+export {
+  BASE_URL,
+  getAccessToken,
+  getHeaders,
+  transferPlayback,
+  play,
+  skipToNext,
+  skipToPrevious,
+};
