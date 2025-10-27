@@ -69,6 +69,7 @@ function updateCardPlayBtnState(playerState) {
   $currentActivePlayBtns.forEach(($playBtn) => {
     $playBtn.classList[paused ? "remove" : "add"]("active");
     $playBtn.setAttribute("data-play-btn", paused ? "paused" : "playing");
+    $playBtn.setAttribute("aria-label", paused ? "Play track" : "Pause track");
   });
   $lastActivePlayBtns = $currentActivePlayBtns;
 }
@@ -78,6 +79,10 @@ function updatePlayerPlayBtnState($player, playerState) {
   const { paused } = playerState;
   $playerPlayBtn.classList[paused ? "remove" : "add"]("active");
   $playerPlayBtn.setAttribute("data-play-btn", paused ? "paused" : "playing");
+  $playerPlayBtn.setAttribute(
+    "aria-label",
+    paused ? "Play track" : "Pause track"
+  );
 }
 
 const $playerPrevTrackBtn = document.querySelector("[data-player-prev-btn]");
@@ -136,28 +141,46 @@ function updatePlayerTrackProgress(playerState) {
   }
 }
 
-async function handlePlayState(player) {
-  const deviceId = localStorage.getItem("device_id");
-  const {
-    context: { uri: currentUri },
-    track_window: {
-      current_track: { uri: currentTrackUri },
-    },
-  } = await player.getCurrentState();
-  const { uri, trackUri, playBtn } = this.dataset; // "this" points to a play button element
+async function handlePlayBtnClick(player, playButton) {
+  try {
+    const deviceId = localStorage.getItem("device_id");
+    const playerState = await player.getCurrentState();
 
-  if (playBtn === "paused") {
-    const isCurrentlyPlaying =
-      currentUri === uri || currentTrackUri === trackUri;
+    if (!playerState) {
+      console.warn("No active playback state");
+      return;
+    }
 
-    if ((!uri && !trackUri) || isCurrentlyPlaying) return await player.resume();
+    const {
+      context: { uri: currentContextUri },
+      track_window: {
+        current_track: { uri: currentTrackUri },
+      },
+    } = playerState;
 
-    const reqBody = {};
-    uri && (reqBody.context_uri = uri);
-    trackUri && (reqBody.uris = [trackUri]);
-    await play(deviceId, reqBody);
-  } else {
-    player.pause();
+    const { uri, trackUri, playBtn: btnState } = playButton.dataset;
+
+    if (btnState === "paused") {
+      const isCurrentlyPlaying =
+        currentContextUri === uri || currentTrackUri === trackUri;
+
+      if ((!uri && !trackUri) || isCurrentlyPlaying) {
+        await player.resume();
+        return;
+      }
+
+      const playbackConfig = {};
+
+      if (uri) playbackConfig.context_uri = uri;
+
+      if (trackUri) playbackConfig.uris = [trackUri];
+
+      await play(deviceId, playbackConfig);
+    } else {
+      await player.pause();
+    }
+  } catch (error) {
+    console.error("Error toggling playback:", error);
   }
 }
 
@@ -174,7 +197,7 @@ function handlePlayerStateChange(playerState) {
 }
 
 const $volumeProgressEl = document.querySelector("[data-volume-progress]");
-const $volumeBtnIcon = document.querySelector("[data-volume-btn].icon");
+const $volumeBtnIcon = document.querySelector("[data-volume-btn] > .icon");
 
 /**
  * Sets the speaker icon based on the current volume level.
@@ -222,7 +245,7 @@ window.onSpotifyWebPlaybackSDKReady = async () => {
 
     const $playBtns = document.querySelectorAll("[data-play-btn]");
     addEventListenersToElems($playBtns, "click", function () {
-      handlePlayState.call(this, player);
+      handlePlayBtnClick(player, this);
     });
 
     // skip to the previous track

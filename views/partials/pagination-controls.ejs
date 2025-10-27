@@ -10,6 +10,7 @@
   <div class="controls-wrapper">
     <a
       href="<%= `${locals.baseUrl}/pages/${+locals.page - 1}` %>"
+      aria-label="<%= locals.previous ? 'Visit previous page' : 'No previous page available' %>"
       class="icon-btn"
       <%= locals.previous ? "" : "disabled" %>
       data-ripple
@@ -20,6 +21,7 @@
 
     <a
       href="<%= `${locals.baseUrl}/pages/${+locals.page + 1}` %>"
+      aria-label="<%= locals.next ? 'Visit next page' : 'No next page available' %>"
       class="icon-btn"
       <%= locals.next ? "" : "disabled" %>
       data-ripple

@@ -38,7 +38,7 @@
   background-color: var(--primary);
   color: var(--on-primary);
   border-radius: var(--radius-full);
-  padding-inline: var(--space-6);
+  padding-inline: var(--space-4) var(--space-6);
   margin-top: var(--space-4);
   margin-inline: auto;
   display: flex;
@@ -87,8 +87,8 @@
   color: var(--primary);
 }
 
-/* RESPONSIVENESS */
-@media screen and (width >= 768px) {
+/* Responsiveness for screen sizes >= 768px */
+@media screen and (width >= 48em) {
   .title {
     font-size: var(--fs-display-medium);
     line-height: var(--lh-display-medium);
@@ -100,7 +100,8 @@
   }
 }
 
-@media screen and (width >= 1200px) {
+/* Responsiveness for screen sizes >= 1200px */
+@media screen and (width >= 75em) {
   .login-page {
     grid-template-rows: auto;
     grid-template-columns: repeat(2, 1fr);
@@ -109,11 +110,6 @@
   .logo {
     margin-right: auto;
   }
-
-  /* .logo img {
-    width: auto;
-    height: 28px;
-  } */
 
   .logo svg {
     width: auto;
@@ -133,7 +129,8 @@
   }
 }
 
-@media screen and (width >= 1400px) {
+/* Responsiveness for screen sizes >= 1400px */
+@media screen and (width >= 87.5em) {
   .title {
     font-size: var(--fs-display-large);
     line-height: var(--lh-display-large);

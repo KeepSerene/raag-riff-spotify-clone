@@ -1,0 +1,63 @@
+<% const { items: trackItems, limit, page } = locals.tracks; %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../layouts/head.ejs", { title: `${locals.title} | RaagRiff` })
+    %>
+  </head>
+
+  <body>
+    <main class="page custom-scrollbar" data-page>
+      <!-- Topbar -->
+      <%- include("../partials/top-bar.ejs", locals.currentUserProfile) %>
+
+      <article class="main" data-main>
+        <section class="section">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title"><%= locals.title %></h2>
+          </div>
+
+          <div class="list">
+            <!-- prettier-ignore -->
+            <% trackItems.forEach(({ id, name, album: { name: albumName, images }, artists, duration_ms, uri: trackUri }, index) => { %>
+              <%
+                const text = artists.map(({ name }) => name).join(", ");
+                index = (index + 1) + (limit * (page - 1)); 
+              %>
+              <%- include("../partials/list-item.ejs", {
+                id,
+                title: name,
+                albumName,
+                images,
+                text,
+                duration_ms,
+                trackSrNo: index,
+                trackUri
+              }) %>    
+            <% }) %>
+          </div>
+
+          <!-- Pagination controls -->
+          <%- include("../partials/pagination-controls.ejs", locals.tracks) %>
+        </section>
+      </article>
+
+      <!-- Music player small -->
+      <%- include("../partials/player-sm.ejs") %>
+
+      <!-- Music player large (modal view) -->
+      <%- include("../partials/player-lg.ejs") %>
+
+      <!-- Footer -->
+      <%- include("../layouts/footer.ejs") %>
+
+      <!-- Bottom navigation -->
+      <%- include("../partials/bottom-nav.ejs") %>
+    </main>
+
+    <!-- Recently played tracks sidebar -->
+    <%- include("../layouts/recent-tracks-sidebar.ejs", { recentTracks:
+    locals.recentlyPlayedTracks }) %>
+  </body>
+</html>

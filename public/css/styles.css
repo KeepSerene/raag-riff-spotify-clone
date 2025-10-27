@@ -18,7 +18,7 @@
   transition: var(--tr-duration-short-4) var(--tr-easing-emphasized);
 }
 
-.header-hide .top-bar {
+.hide-header .top-bar {
   transform: translateY(-100%);
 }
 
@@ -311,10 +311,6 @@
   gap: var(--space-2);
 }
 
-.section-title {
-  color: var(--on-surface);
-}
-
 .figure-img {
   background-color: var(--white-alpha-20);
   overflow: hidden;
@@ -568,7 +564,7 @@
     position: sticky;
   }
 
-  .header-hide .top-bar {
+  .hide-header .top-bar {
     transform: translateY(0);
   }
 

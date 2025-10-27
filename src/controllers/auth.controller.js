@@ -11,7 +11,7 @@
 
 const querystring = require("querystring");
 const apiConfig = require("../configs/api.config");
-const utils = require("../utils/index");
+const utils = require("../utils");
 const { getSpotifyTokens } = require("../api/auth.api");
 
 // initiates the authorization request

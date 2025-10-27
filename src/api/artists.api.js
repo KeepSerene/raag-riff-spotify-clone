@@ -9,7 +9,7 @@
 
 const { getApiResponse } = require("../configs/axios.config");
 const apiConfig = require("../configs/api.config");
-const { calculateOffset } = require("../utils/index");
+const { calculateOffset } = require("../utils");
 
 /**
  * Get information about multiple artists

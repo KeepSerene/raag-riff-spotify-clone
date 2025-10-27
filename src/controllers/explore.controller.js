@@ -13,7 +13,7 @@ const apiConfig = require("../configs/api.config");
 
 async function handleExplore(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchCurrentUserProfile(req);
+    const currentUserProfile = await userApi.fetchProfile(req);
     const recentlyPlayedTracksInfo =
       await playerApi.getRecentlyPlayedTracksInfo(req);
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
@@ -50,7 +50,7 @@ async function handleExplore(req, res) {
 
 async function handleExploreSingleCat(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchCurrentUserProfile(req);
+    const currentUserProfile = await userApi.fetchProfile(req);
     const recentlyPlayedTracksInfo =
       await playerApi.getRecentlyPlayedTracksInfo(req);
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(

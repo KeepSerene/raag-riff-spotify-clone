@@ -1,0 +1,66 @@
+<% const { baseUrl, page, message: title, playlists: { items:
+featuredPlaylistItems } } = locals.featuredPlaylistsInfo; %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../layouts/head.ejs", { title: `${title} | RaagRiff` }) %>
+  </head>
+
+  <body>
+    <main class="page custom-scrollbar" data-page>
+      <!-- Topbar -->
+      <%- include("../partials/top-bar.ejs", locals.currentUserProfile) %>
+
+      <article class="main" data-main>
+        <section class="section">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title"><%= title %></h2>
+          </div>
+
+          <div class="grid-list">
+            <!-- prettier-ignore -->
+            <% featuredPlaylistItems.forEach(item => { %>
+              <% if (item !== null) { %>
+                <% 
+                  const { id, name: title, images, description, uri } = item;
+                  const [image] = images || [];
+                %>
+
+                <%- include("../partials/card.ejs", {
+                  type: 'playlist',
+                  title,
+                  image,
+                  text: description,
+                  link: `/playlists/${id}`,
+                  uri
+                }) %>
+              <% } %>
+            <% }) %>
+          </div>
+
+          <!-- Pagination controls -->
+          <%- include("../partials/pagination-controls.ejs", { baseUrl, page,
+          ...locals.featuredPlaylistsInfo.playlists }) %>
+        </section>
+      </article>
+
+      <!-- Music player small -->
+      <%- include("../partials/player-sm.ejs") %>
+
+      <!-- Music player large (modal view) -->
+      <%- include("../partials/player-lg.ejs") %>
+
+      <!-- Footer -->
+      <%- include("../layouts/footer.ejs") %>
+
+      <!-- Bottom navigation -->
+      <%- include("../partials/bottom-nav.ejs", { currentRoute: "/playlists" })
+      %>
+    </main>
+
+    <!-- Recently played tracks sidebar -->
+    <%- include("../layouts/recent-tracks-sidebar.ejs", { recentTracks:
+    locals.recentlyPlayedTracks }) %>
+  </body>
+</html>

@@ -14,7 +14,7 @@ const playlistsApi = require("../api/playlists.api");
 
 async function handleHome(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchCurrentUserProfile(req);
+    const currentUserProfile = await userApi.fetchProfile(req);
     const recentlyPlayedTracksInfo =
       await playerApi.getRecentlyPlayedTracksInfo(req);
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(

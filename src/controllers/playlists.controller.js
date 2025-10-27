@@ -7,12 +7,10 @@
 
 const userApi = require("../api/user.api");
 const playerApi = require("../api/player.api");
-const newReleasesApi = require("../api/new-releases.api");
-const artistsApi = require("../api/artists.api");
-const apiConfig = require("../configs/api.config");
+const playlistsApi = require("../api/playlists.api");
 const { formatTimestamp } = require("../utils");
 
-async function handleAlbums(req, res) {
+async function handlePlaylists(req, res) {
   try {
     const currentUserProfile = await userApi.fetchProfile(req);
     const recentlyPlayedTracksInfo =
@@ -20,16 +18,15 @@ async function handleAlbums(req, res) {
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const newReleases = await newReleasesApi.getNewReleasesWithPagination(req);
+    const featuredPlaylistsInfo = await playlistsApi.getFeaturedPlaylists(req);
 
-    res.render("./pages/albums.ejs", {
-      title: "New Releases",
+    res.render("./pages/playlists.ejs", {
       currentUserProfile,
       recentlyPlayedTracks,
-      albums: newReleases,
+      featuredPlaylistsInfo,
     });
   } catch (error) {
-    console.error("Albums handler - error:", error.message);
+    console.error("Playlists handler - error:", error.message);
 
     // If it's a 401 error, the token has likely expired
     if (error.response && error.response.status === 401) {
@@ -49,7 +46,7 @@ async function handleAlbums(req, res) {
   }
 }
 
-async function handleSingleAlbum(req, res) {
+async function handleSinglePlaylist(req, res) {
   try {
     const currentUserProfile = await userApi.fetchProfile(req);
     const recentlyPlayedTracksInfo =
@@ -57,23 +54,16 @@ async function handleSingleAlbum(req, res) {
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const albumInfo = await newReleasesApi.getAlbumInfo(req);
-    const [firstArtist] = albumInfo.artists;
-    const moreAlbumsByArtist = await artistsApi.getArtistAlbums(
-      req,
-      firstArtist.id,
-      apiConfig.LOWER_LIMIT
-    );
+    const playlistInfo = await playlistsApi.getPlaylistInfo(req);
 
-    res.render("./pages/single-album.ejs", {
+    res.render("./pages/single-playlist.ejs", {
       currentUserProfile,
       recentlyPlayedTracks,
-      albumInfo,
-      moreByArtist: { firstArtist, ...moreAlbumsByArtist },
+      playlistInfo,
       formatTimestamp,
     });
   } catch (error) {
-    console.error("Single album handler - error:", error.message);
+    console.error("Single playlist handler - error:", error.message);
 
     // If it's a 401 error, the token has likely expired
     if (error.response && error.response.status === 401) {
@@ -93,4 +83,4 @@ async function handleSingleAlbum(req, res) {
   }
 }
 
-module.exports = { handleAlbums, handleSingleAlbum };
+module.exports = { handlePlaylists, handleSinglePlaylist };

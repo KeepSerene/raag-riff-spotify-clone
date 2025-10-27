@@ -103,6 +103,7 @@ async function getFeaturedPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
     return {
       baseUrl: req.baseUrl,
       page: currentPage,
+      message: "Popular Playlists",
       playlists: {
         items: paginatedPlaylists,
         total: totalPlaylists,
@@ -229,4 +230,24 @@ async function getCategoryPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
   }
 }
 
-module.exports = { getFeaturedPlaylists, getCategoryPlaylists };
+/**
+ * Get a playlist owned by a Spotify user. See
+ * https://developer.spotify.com/documentation/web-api/reference/get-playlist
+ * @param {Object} req - Express request object
+ * @returns {Promise<Object>}
+ */
+async function getPlaylistInfo(req) {
+  const { playlistId } = req.params;
+  const { data: playlistInfo } = await getApiResponse(
+    `/playlists/${playlistId}?fields=id,type,name,images,description,external_urls,owner(display_name),followers(total),uri,tracks(id,name,total,items(track(album(name,images),artists,duration_ms,uri)))`,
+    req.cookies.access_token
+  );
+
+  return playlistInfo;
+}
+
+module.exports = {
+  getFeaturedPlaylists,
+  getCategoryPlaylists,
+  getPlaylistInfo,
+};

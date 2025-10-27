@@ -1,4 +1,3 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"); */
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 @import url("./reset.css");
 @import url("./variables.css");
@@ -397,6 +396,10 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   background-color: var(--outline);
 }
 
+.divider.variant {
+  background-color: var(--outline-variant);
+}
+
 /* (Tabular) List styles */
 .list-container {
   position: relative;
@@ -415,7 +418,7 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   transition: var(--tr-duration-short-4) var(--tr-easing-emphasized);
 }
 
-.header-hide .list-header {
+.hide-header .list-header {
   top: -64px;
 }
 
@@ -433,7 +436,7 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
   display: none;
 }
 
-.list-header .title-col {
+.list-header .col {
   flex-grow: 1;
 }
 
@@ -446,6 +449,11 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 /* Utility styles */
 .section {
   margin-top: var(--space-4);
+}
+
+.section-title {
+  color: var(--on-surface);
+  text-transform: capitalize;
 }
 
 .truncate {
@@ -520,7 +528,7 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 
 /* Responsiveness for screen sizes >= 768px */
 @media screen and (width >= 48em) {
-  body {
+  body:not(.login-page-body) {
     background-color: var(--surface);
     padding: var(--space-2);
     padding-left: calc(var(--navigation-rail-width) + var(--space-4));
@@ -559,7 +567,7 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
     padding-top: var(--space-6);
   }
 
-  .header-hide .list-header,
+  .hide-header .list-header,
   .list-header {
     top: var(--top-bar-height);
   }
@@ -596,8 +604,25 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
     text-align: center;
   }
 
+  .list-container:has(.item-album) .list-header :where(.sr-no-col, .album-col) {
+    text-align: left;
+  }
+
   .list-header .album-col {
     margin-left: 88px;
+  }
+
+  .item-sr-no,
+  .item-album {
+    display: block;
+  }
+
+  .list-item .item-sr-no {
+    min-width: 28px;
+  }
+
+  .list-item .item-content {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) 42px;
   }
 }
 

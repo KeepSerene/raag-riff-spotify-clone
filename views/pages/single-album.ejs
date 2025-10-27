@@ -31,7 +31,7 @@ const {
     <%- include("../layouts/head.ejs", { title: `${albumName} — ${artistNames} |
     RaagRiff` }) %>
 
-    <link rel="stylesheet" href="/css/album-info.css">
+    <link rel="stylesheet" href="/css/info-page.css">
 
     <style>
       .page::before {
@@ -64,8 +64,8 @@ const {
               src="<%= albumInfoBannerSrc %>"
               alt="<%= albumName %> banner"
               width="<%= albumInfoBannerWidth %>"
-              height="<%= albumInfoBannerHeight
-             %>"
+              height="<%= albumInfoBannerHeight %>"
+              loading="lazy"
               class="cover-img"
               data-lazy-loaded
             />
@@ -124,7 +124,7 @@ const {
           <header class="list-header" data-list-header>
             <div class="sr-no-col body-large">#</div>
 
-            <div class="title-col body-large">Title</div>
+            <div class="col body-large">Track</div>
 
             <div class="duration-col">
               <span aria-label="Duration" class="material-symbols-rounded">schedule</span>

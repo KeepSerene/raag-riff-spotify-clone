@@ -9,7 +9,7 @@
 
 const apiConfig = require("../configs/api.config");
 const { getApiResponse } = require("../configs/axios.config");
-const { calculateOffset } = require("../utils/index");
+const { calculateOffset } = require("../utils");
 
 /**
  * Get a list of categories used to tag items in Spotify

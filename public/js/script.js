@@ -49,10 +49,10 @@ $page.addEventListener("scroll", function () {
     return; // ignore DELTA amount scrolls
   } else if (this.scrollTop > prevScrollPos) {
     // current scroll pos > previous scroll pos => user scrolled down
-    this.classList.add("header-hide");
+    this.classList.add("hide-header");
   } else {
     // current scroll pos <= prev scroll pos =>
-    this.classList.remove("header-hide");
+    this.classList.remove("hide-header");
   }
 
   // update prev scroll pos with the current scroll pos

@@ -12,6 +12,9 @@ pnpm-debug.log*
 .env.test.local
 .env.production.local
 
+# EXCEPTION
+!.env.sample
+
 # Runtime data
 pids
 *.pid

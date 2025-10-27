@@ -1,0 +1,214 @@
+<!-- prettier-ignore -->
+<%
+  const {
+    display_name: profileName,
+    images: profileImages,
+    followers: { total: totalProfileFollowers }
+  } = locals.currentUserProfile;
+  const {
+    total: totalTopArtists,
+    items: topArtistItems,
+    next: topArtistsNextPage
+  } = locals.userTopArtists;
+  const {
+    total: totalTopTracks,
+    items: topTrackItems,
+    next: topTracksNextPage
+  } = locals.userTopTracks;
+  const {
+    total: totalFollowedArtists,
+    items: followedArtistItems,
+    next: followedArtistsNextPage
+  } = locals.userFollowedArtists;
+%>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../layouts/head.ejs", { title: `${profileName} | RaagRiff` })
+    %>
+
+    <style>
+      .info-header {
+        align-items: center;
+      }
+
+      .info-banner {
+        border-radius: var(--radius-full);
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="page custom-scrollbar" data-page>
+      <!-- Topbar -->
+      <%- include("../partials/top-bar.ejs", locals.currentUserProfile) %>
+
+      <article class="main">
+        <!-- Profile info -->
+        <header class="info-header">
+          <figure class="figure-img info-banner">
+            <% const { width = 300, height = 300, url =
+            "/images/artist-banner.png" } = profileImages.find(img => img.width
+            === 300) ?? {}; %>
+
+            <img
+              src="<%= url %>"
+              alt="<%= profileName %>'s avatar"
+              width="<%= width %>"
+              height="<%= height %>"
+              loading="lazy"
+              class="cover-img"
+              data-lazy-loaded
+            />
+          </figure>
+
+          <div class="info-content">
+            <p class="label-large info-subtitle">Profile</p>
+
+            <h2 class="headline-large info-title"><%= profileName %></h2>
+
+            <div class="info-text has-separator">
+              <% if (totalProfileFollowers > 1) { %>
+              <p class="label-large">
+                <%- totalProfileFollowers.toLocaleString("en-US") %> Followers
+              </p>
+              <% } else { %>
+              <p class="label-large">
+                <%- totalProfileFollowers.toLocaleString("en-US") %> Follower
+              </p>
+              <% } %>
+              <span class="separator"></span>
+
+              <p class="label-large">
+                <%- totalFollowedArtists.toLocaleString("en-US") %> Following
+              </p>
+            </div>
+          </div>
+        </header>
+
+        <div class="divider variant"></div>
+
+        <!-- Top artists -->
+        <% if (totalTopArtists > 0) { %>
+        <section class="section">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">Top Artists</h2>
+
+            <% if (topArtistsNextPage !== null) { %>
+            <a href="/me/top/artists" class="btn btn-link" data-ripple>
+              <span class="label-large">See all</span>
+              <div class="state-layer"></div>
+            </a>
+            <% } %>
+          </div>
+
+          <div class="slider" data-slider>
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% topArtistItems.forEach(({id, name, type, images, uri }) => { %>
+                <% const [image] = images || []; %>
+                <%- include("../partials/card.ejs", {
+                    variant: "artist-card",
+                    type: "artist",
+                    title: name,
+                    image,
+                    text: type,
+                    link: `/artists/${id}`,
+                    uri
+                }) %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+        <% } %>
+
+        <!-- Top tracks -->
+        <% if (totalTopTracks > 0) { %>
+        <section class="section">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">Top Tracks</h2>
+
+            <% if (topTracksNextPage !== null) { %>
+            <a href="/me/top/tracks" class="btn btn-link" data-ripple>
+              <span class="label-large">See all</span>
+              <div class="state-layer"></div>
+            </a>
+            <% } %>
+          </div>
+
+          <div class="list">
+            <!-- prettier-ignore -->
+            <% topTrackItems.forEach(({id, name, album: { name: albumName, images }, artists, uri: trackUri, duration_ms }, index) => { %>
+                <%
+                  const text = artists.map(({ name }) => name).join(", ");
+                  index++; 
+                %>
+                <%- include("../partials/list-item.ejs", {
+                    id,
+                    title: name,
+                    albumName,
+                    images,
+                    text,
+                    trackSrNo: index,
+                    trackUri,
+                    duration_ms
+                }) %>
+            <% }) %>
+          </div>
+        </section>
+        <% } %>
+
+        <!-- Followed artists -->
+        <% if (totalFollowedArtists > 0) { %>
+        <section class="section">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">Following</h2>
+
+            <% if (followedArtistsNextPage !== null) { %>
+            <a href="/me/following" class="btn btn-link" data-ripple>
+              <span class="label-large">See all</span>
+              <div class="state-layer"></div>
+            </a>
+            <% } %>
+          </div>
+
+          <div class="slider" data-slider>
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% followedArtistItems.forEach(({id, name, type, images, uri }) => { %>
+                <% const [image] = images || []; %>
+                <%- include("../partials/card.ejs", {
+                    variant: "artist-card",
+                    type: "artist",
+                    title: name,
+                    image,
+                    text: type,
+                    link: `/artists/${id}`,
+                    uri
+                }) %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+        <% } %>
+      </article>
+
+      <!-- Music player small -->
+      <%- include("../partials/player-sm.ejs") %>
+
+      <!-- Music player large (modal view) -->
+      <%- include("../partials/player-lg.ejs") %>
+
+      <!-- Footer -->
+      <%- include("../layouts/footer.ejs") %>
+
+      <!-- Bottom navigation -->
+      <%- include("../partials/bottom-nav.ejs") %>
+    </main>
+
+    <!-- Recently played tracks sidebar -->
+    <%- include("../layouts/recent-tracks-sidebar.ejs", { recentTracks:
+    locals.recentlyPlayedTracks }) %>
+  </body>
+</html>
