@@ -27,5 +27,5 @@
     hsla(0, 0%, 0%, 0),
     var(--background)
   );
-  filter: blur(150px);
+  backdrop-filter: blur(150px);
 }

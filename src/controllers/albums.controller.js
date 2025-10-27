@@ -62,8 +62,6 @@ async function handleSingleAlbum(req, res) {
       firstArtist.id,
       apiConfig.LOWER_LIMIT
     );
-    console.log(albumInfo);
-    console.log(moreAlbumsByArtist);
 
     res.render("./pages/single-album.ejs", {
       currentUserProfile,

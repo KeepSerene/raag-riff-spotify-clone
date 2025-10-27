@@ -2,10 +2,10 @@
 locals.images?.find(img => img?.width < 200) ?? {}; %>
 
 <div class="list-item" title="<%= locals.title %>" data-ripple>
-  <% if (locals.trackNumber) { %>
-  <span class="item-number body-medium">
+  <% if (locals.trackSrNo) { %>
+  <span class="item-sr-no body-medium">
     <!-- prettier-ignore -->
-    <%= locals.trackNumber %>
+    <%= locals.trackSrNo %>
 
     <% if(!locals.images) {  %>
         <%- include("./play-btn.ejs", {

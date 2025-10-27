@@ -26,6 +26,10 @@
   display: none;
 }
 
+.list-header-active .top-bar {
+  background-color: var(--background);
+}
+
 .icon-btn {
   --state-layer-bg: var(--on-surface-variant);
 

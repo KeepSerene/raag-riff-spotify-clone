@@ -166,3 +166,16 @@ const historyForwardBtn = document.querySelector("[data-history-forward-btn]");
 
 historyBackBtn?.addEventListener("click", () => window.history.back());
 historyForwardBtn?.addEventListener("click", () => window.history.forward());
+
+/**
+ * Add background color to the list-header when sticky on top
+ */
+const $listHeader = document.querySelector("[data-list-header]");
+
+$page?.addEventListener("scroll", function () {
+  if ($listHeader) {
+    this.classList[$listHeader.offsetTop > 0 ? "add" : "remove"](
+      "list-header-active"
+    );
+  }
+});

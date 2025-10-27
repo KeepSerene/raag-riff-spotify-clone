@@ -157,7 +157,6 @@ async function handlePlayState(player) {
 
 function handlePlayerStateChange(playerState) {
   const { track_window } = playerState;
-  // console.log("Player state:", playerState);
   $players.forEach(($player) => updatePlayerUI($player, playerState));
   updateCardPlayBtnState(playerState); // play or pause
   $players.forEach(($player) => updatePlayerPlayBtnState($player, playerState)); // play or pause

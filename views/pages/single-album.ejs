@@ -35,7 +35,18 @@ const {
 
     <style>
       .page::before {
-        background-image: url("<%= albumInfoBannerSrc %>")
+        background-image: url("<%= albumInfoBannerSrc %>");
+      }
+
+      .list-item .item-content {
+        grid-template-columns: minmax(0, 1fr) 42px;
+      }
+
+      .list-item .item-sr-no {
+        display: block;
+        width: 28px;
+        text-align: center;
+        position: relative;
       }
     </style>
   </head>
@@ -47,8 +58,8 @@ const {
 
       <article class="main">
         <!-- Album info -->
-        <header class="album-info-header">
-          <figure class="figure-img album-info-banner">
+        <header class="info-header">
+          <figure class="figure-img info-banner">
             <img
               src="<%= albumInfoBannerSrc %>"
               alt="<%= albumName %> banner"
@@ -56,15 +67,16 @@ const {
               height="<%= albumInfoBannerHeight
              %>"
               class="cover-img"
+              data-lazy-loaded
             />
           </figure>
 
-          <div class="album-info-content">
-            <p class="label-large album-info-subtitle"><%= album_type %></p>
+          <div class="info-content">
+            <p class="label-large info-subtitle"><%= album_type %></p>
 
-            <h2 class="headline-large album-info-title"><%= albumName %></h2>
+            <h2 class="headline-large info-title"><%= albumName %></h2>
 
-            <div class="album-info-text has-separator">
+            <div class="info-text has-separator">
               <% artists.forEach(({ name }) => { %>
               <p class="label-large"><%= name %></p>
               <span class="separator"></span>
@@ -82,7 +94,7 @@ const {
               <% } %>
             </div>
 
-            <div class="album-info-actions">
+            <div class="info-actions">
               <%- include("../partials/play-btn.ejs", { variant: "filled",
               dataAttr: `data-uri=${albumUri}` }) %>
 
@@ -110,16 +122,16 @@ const {
         <!-- Album tracks -->
         <div class="list-container">
           <header class="list-header" data-list-header>
-            <div class="number-col body-large">#</div>
+            <div class="sr-no-col body-large">#</div>
 
-            <div class="col body-large">Title</div>
+            <div class="title-col body-large">Title</div>
 
             <div class="duration-col">
-              <span class="material-symbols-rounded">schedule</span>
+              <span aria-label="Duration" class="material-symbols-rounded">schedule</span>
             </div>
           </header>
 
-          <div role="list" class="list">
+          <div class="list">
             <!-- prettier-ignore -->
             <% albumTracks.forEach(({ id, name: title, artists, uri: trackUri, duration_ms }, index) => { %>
               <%
@@ -140,7 +152,7 @@ const {
         </div>
 
         <!-- Album copyright -->
-         <div class="album-info-copyright">
+         <div class="info-copyright">
           <p class="body-medium">
             <%= new Date(release_date).toDateString() %>
 
