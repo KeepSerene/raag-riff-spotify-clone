@@ -16,25 +16,29 @@
     </figure>
 
     <%- include("./play-btn.ejs", { variant: "filled", dataAttr:
-  `data-uri="${locals.uri}"` }) %>
+    `data-uri="${locals.uri}"` }) %>
   </div>
 
   <div class="card-content">
-    <h3 class="title-medium card-title truncate">
-      <%= locals.title %>
-    </h3>
+    <h3 class="title-medium card-title truncate"><%= locals.title %></h3>
 
     <p class="body-medium card-text has-separator line-clamp-2">
+      <!-- prettier-ignore -->
       <% if (locals.year) { %>
-        <span><%= locals.year %></span>
-        <div class="separator"></div>
+      <span><%= locals.year %></span>
+      <span class="separator"></span>
       <% } %>
 
+      <!-- prettier-ignore -->
       <%- locals.text %>
     </p>
   </div>
 
-  <a href="<%= locals.link %>" class="card-link" aria-label="<%= locals.title %>"></a>
+  <a
+    href="<%= locals.link %>"
+    class="card-link"
+    aria-label="<%= locals.title %>"
+  ></a>
 
   <div class="state-layer"></div>
 </div>

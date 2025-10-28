@@ -20,7 +20,7 @@
 
           <div class="grid-list">
             <!-- prettier-ignore -->
-            <% artistItems.forEach(({ id, name, type, images, uri }) => { %>
+            <% artistItems.filter(item => item !== null).forEach(({ id, name, type, images, uri }) => { %>
                 <% const [image] = images || []; %>
                 <%- include("../partials/card.ejs", {
                   variant: "artist-card",

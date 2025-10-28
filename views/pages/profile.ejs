@@ -106,7 +106,7 @@
           <div class="slider" data-slider>
             <div class="slider-inner">
               <!-- prettier-ignore -->
-              <% topArtistItems.forEach(({id, name, type, images, uri }) => { %>
+              <% topArtistItems.filter(item => item !== null).forEach(({id, name, type, images, uri }) => { %>
                 <% const [image] = images || []; %>
                 <%- include("../partials/card.ejs", {
                     variant: "artist-card",
@@ -139,7 +139,7 @@
 
           <div class="list">
             <!-- prettier-ignore -->
-            <% topTrackItems.forEach(({id, name, album: { name: albumName, images }, artists, uri: trackUri, duration_ms }, index) => { %>
+            <% topTrackItems.filter(item => item !== null).forEach(({id, name, album: { name: albumName, images }, artists, uri: trackUri, duration_ms }, index) => { %>
                 <%
                   const text = artists.map(({ name }) => name).join(", ");
                   index++; 
@@ -176,7 +176,7 @@
           <div class="slider" data-slider>
             <div class="slider-inner">
               <!-- prettier-ignore -->
-              <% followedArtistItems.forEach(({id, name, type, images, uri }) => { %>
+              <% followedArtistItems.filter(item => item !== null).forEach(({id, name, type, images, uri }) => { %>
                 <% const [image] = images || []; %>
                 <%- include("../partials/card.ejs", {
                     variant: "artist-card",

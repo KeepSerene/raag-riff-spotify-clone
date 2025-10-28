@@ -1,12 +1,9 @@
-<% const { name: catName } = locals.catDetails %>
-<!-- prettier-ignore -->
-<% const { baseUrl, page, playlists: { items: catPlaylistItems } } = locals.catPlaylistsInfo %>
+<% const { items: playlistItems } = locals.playlistSearchResultsInfo; %>
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <%- include("../layouts/head.ejs", { title: `Explore ${catName} | RaagRiff`
-    }) %>
+    <%- include("../layouts/head.ejs", { title: "Search | RaagRiff" }) %>
   </head>
 
   <body>
@@ -14,36 +11,32 @@
       <!-- Topbar -->
       <%- include("../partials/top-bar.ejs", locals.currentUserProfile) %>
 
+      <!-- Search filters -->
+      <%- include("../layouts/search-filters.ejs", { type: locals.type }) %>
+
       <article class="main">
         <section class="section">
-          <div class="title-wrapper">
-            <h2 class="title-large section-title"><%= catName %></h2>
-          </div>
-
           <div class="grid-list">
             <!-- prettier-ignore -->
-            <% catPlaylistItems.filter(item => item !== null).forEach(item => { %>
-              <% if (item !== null) { %>
+            <% playlistItems.filter(item => item !== null).forEach(({ id, name: title, images, owner, uri }) => { %>
                 <% 
-                  const { id, name: title, images, description, uri } = item;
                   const [image] = images || [];
+                  const text = `By ${owner.display_name}`; 
                 %>
-
                 <%- include("../partials/card.ejs", {
-                  type: 'playlist',
-                  title,
-                  image,
-                  text: description,
-                  link: `/playlists/${id}`,
-                  uri
+                    type: "playlist",
+                    title,
+                    image,
+                    text,
+                    link: `/playlists/${id}`,
+                    uri
                 }) %>
-              <% } %>
             <% }) %>
           </div>
 
           <!-- Pagination controls -->
-          <%- include("../partials/pagination-controls.ejs", { baseUrl, page,
-          ...locals.catPlaylistsInfo.playlists }) %>
+          <%- include("../partials/pagination-controls.ejs",
+          locals.playlistSearchResultsInfo) %>
         </section>
       </article>
 

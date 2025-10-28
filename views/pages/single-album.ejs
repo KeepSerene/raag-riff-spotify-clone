@@ -122,7 +122,7 @@ const {
         <!-- Album tracks -->
         <div class="list-container">
           <header class="list-header" data-list-header>
-            <div class="sr-no-col body-large">#</div>
+            <div aria-label="Serial number" class="sr-no-col body-large">#</div>
 
             <div class="col body-large">Track</div>
 
@@ -133,7 +133,7 @@ const {
 
           <div class="list">
             <!-- prettier-ignore -->
-            <% albumTracks.forEach(({ id, name: title, artists, uri: trackUri, duration_ms }, index) => { %>
+            <% albumTracks.filter(item => item !== null).forEach(({ id, name: title, artists, uri: trackUri, duration_ms }, index) => { %>
               <%
                 const text = artists.map(({ name }) => name).join(", ");
                 index++; 

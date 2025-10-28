@@ -74,17 +74,17 @@ const navItems = [
   </a>
 
   <!-- prettier-ignore -->
-   <% navItems.forEach(({href, icon, label}) => { %>
-        <a href="<%=href%>" class="bottom-nav-item <%= locals.currentRoute === href ? "active" : "" %>" data-bottom-nav-item>
+   <% navItems.forEach(({ href, icon, label }) => { %>
+        <a href="<%= href %>" class="bottom-nav-item <%= locals.currentRoute === href ? "active" : "" %>" data-bottom-nav-item>
             <div class="icon-wrapper">
                 <span class="material-symbols-rounded icon">
-                    <%=icon%>
+                    <%= icon %>
                 </span>
                 <div class="indicator"></div>
                 <div class="state-layer"></div>
             </div>
 
-            <p class="bottom-nav-text label-medium"><%=label%></p>
+            <p class="bottom-nav-text label-medium"><%= label %></p>
         </a>
     <% }) %>
 </nav>

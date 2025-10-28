@@ -21,7 +21,7 @@
 
           <div class="grid-list">
             <!-- prettier-ignore -->
-            <% categoryItems.forEach(({ id, icons, name }) => { %>
+            <% categoryItems.filter(item => item !== null).forEach(({ id, icons, name }) => { %>
                 <% const { width, height, url } = icons.at(0) %>
                 <%- include("../partials/category-card.ejs", {
                     id,

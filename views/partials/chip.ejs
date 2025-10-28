@@ -1,0 +1,11 @@
+<a
+  href="/search/<%= locals.filterType %>/<%= locals.query %>"
+  aria-label="Visit '<%= locals.query %>' page"
+  class="chip <%= locals.searchType === locals.filterType ? 'active' : '' %>"
+  data-search-filter
+  data-ripple
+>
+  <span class="material-symbols-rounded icon">check</span>
+  <span class="label-large"> <%= locals.label %> </span>
+  <div class="state-layer"></div>
+</a>

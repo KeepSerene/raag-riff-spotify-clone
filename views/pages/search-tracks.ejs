@@ -1,0 +1,62 @@
+<% const { items: trackItems, limit, page } = locals.trackSearchResultsInfo; %>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../layouts/head.ejs", { title: "Search | RaagRiff" }) %>
+  </head>
+
+  <body>
+    <main class="page custom-scrollbar" data-page>
+      <!-- Topbar -->
+      <%- include("../partials/top-bar.ejs", locals.currentUserProfile) %>
+
+      <!-- Search filters -->
+      <%- include("../layouts/search-filters.ejs", { type: locals.type }) %>
+
+      <article class="main">
+        <section class="section">
+          <div class="list">
+            <!-- prettier-ignore -->
+            <% trackItems.filter(item => item !== null).forEach(({ id, name: title, artists, album: { name: albumName, images }, duration_ms, uri: trackUri }, index) => { %>
+                <%
+                  const text = artists.map(({ name }) => name).join(", ");
+                  index = (index + 1) + (limit * (page - 1));
+                %>
+                <%- include("../partials/list-item.ejs", {
+                  id,
+                  title,
+                  albumName,
+                  images,
+                  text,
+                  duration_ms,
+                  trackSrNo: index,
+                  trackUri
+                }) %>
+            <% }) %>
+          </div>
+
+          <!-- Pagination controls -->
+          <%- include("../partials/pagination-controls.ejs",
+          locals.trackSearchResultsInfo) %>
+        </section>
+      </article>
+
+      <!-- Music player small -->
+      <%- include("../partials/player-sm.ejs") %>
+
+      <!-- Music player large (modal view) -->
+      <%- include("../partials/player-lg.ejs") %>
+
+      <!-- Footer -->
+      <%- include("../layouts/footer.ejs") %>
+
+      <!-- Bottom navigation -->
+      <%- include("../partials/bottom-nav.ejs") %>
+    </main>
+
+    <!-- Recently played tracks sidebar -->
+    <%- include("../layouts/recent-tracks-sidebar.ejs", { recentTracks:
+    locals.recentlyPlayedTracks }) %>
+  </body>
+</html>

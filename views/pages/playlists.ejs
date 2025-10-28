@@ -20,7 +20,7 @@ featuredPlaylistItems } } = locals.featuredPlaylistsInfo; %>
 
           <div class="grid-list">
             <!-- prettier-ignore -->
-            <% featuredPlaylistItems.forEach(item => { %>
+            <% featuredPlaylistItems.filter(item => item !== null).forEach(item => { %>
               <% if (item !== null) { %>
                 <% 
                   const { id, name: title, images, description, uri } = item;

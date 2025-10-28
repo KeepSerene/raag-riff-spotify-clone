@@ -127,17 +127,17 @@ window.addEventListener("DOMContentLoaded", () => {
  * Bottom nav item active
  */
 const $bottomNavItems = document.querySelectorAll("[data-bottom-nav-item]");
-const $activeBottomNavItem = document.querySelector(
+const $lastActiveBottomNavItem = document.querySelector(
   "[data-bottom-nav-item].active"
 );
 
-function handleActiveBottomNavItem() {
-  $activeBottomNavItem?.classList.remove("active");
+function handleBottomNavItemClick() {
+  $lastActiveBottomNavItem?.classList.remove("active");
   this.classList.add("active");
 }
 
 $bottomNavItems &&
-  addEventListenersToElems($bottomNavItems, "click", handleActiveBottomNavItem);
+  addEventListenersToElems($bottomNavItems, "click", handleBottomNavItemClick);
 
 /**
  * Player modal toggle
@@ -168,14 +168,34 @@ historyBackBtn?.addEventListener("click", () => window.history.back());
 historyForwardBtn?.addEventListener("click", () => window.history.forward());
 
 /**
- * Add background color to the list-header when sticky on top
+ * Add background color to "list-header" when sticky on top
  */
 const $listHeader = document.querySelector("[data-list-header]");
 
 $page?.addEventListener("scroll", function () {
   if ($listHeader) {
     this.classList[$listHeader.offsetTop > 0 ? "add" : "remove"](
-      "list-header-active"
+      "list-header-sticky"
     );
   }
 });
+
+/**
+ * Search filter chip active
+ */
+const $searchFilterChips = document.querySelectorAll("[data-search-filter]");
+const $lastActiveSearchFilterChip = document.querySelector(
+  "[data-search-filter].active"
+);
+
+function handleSearchFilterChipClick() {
+  $lastActiveSearchFilterChip?.classList.remove("active");
+  this.classList.add("active");
+}
+
+$searchFilterChips &&
+  addEventListenersToElems(
+    $searchFilterChips,
+    "click",
+    handleSearchFilterChipClick
+  );

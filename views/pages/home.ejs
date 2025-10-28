@@ -29,7 +29,7 @@
           <div class="slider">
             <div class="slider-inner">
               <!-- prettier-ignore -->
-              <% locals.recommendedAlbums.forEach(({ id, name: title, artists, images, uri }) => { %>
+              <% locals.recommendedAlbums.filter(item => item !== null).forEach(({ id, name: title, artists, images, uri }) => { %>
                 <%
                   const text = artists.map(({ name }) => name).join(", "); 
                   const img300x300 = images.find(img => img.width === 300);
@@ -61,7 +61,7 @@
           <div class="slider">
             <div class="slider-inner">
               <!-- prettier-ignore -->
-              <% recommendedArtists.forEach(({ name: title, id, type, uri, images }) => { %>
+              <% recommendedArtists.filter(item => item !== null).forEach(({ name: title, id, type, uri, images }) => { %>
                 <% const [image] = images || [] %>
 
                 <%- 
@@ -98,7 +98,7 @@
           <div class="slider">
             <div class="slider-inner">
               <!-- prettier-ignore -->
-              <% newReleasesCurrentPage.forEach(({ id, name: title, images, artists, uri }) => { %>
+              <% newReleasesCurrentPage.filter(item => item !== null).forEach(({ id, name: title, images, artists, uri }) => { %>
                 <%
                   const text = artists.map(({name}) => name).join(", ");
                   const img300x300 = images.find(img => img.width === 300); 
@@ -136,7 +136,7 @@
           <div class="slider">
             <div class="slider-inner">
               <!-- prettier-ignore -->
-              <% playlistsCurrentPage.forEach(({ id, name: title, description, images, uri, owner }) => { %>
+              <% playlistsCurrentPage.filter(item => item !== null).forEach(({ id, name: title, description, images, uri, owner }) => { %>
                 <%
                   const text = description || owner?.display_name || "Spotify";
                   const [image] = images || [];
@@ -174,7 +174,7 @@
           <div class="slider">
             <div class="slider-inner">
               <!-- prettier-ignore -->
-              <% catPlaylistsCurrentPage.forEach(({ id, name: title, description, images, uri, owner }) => { %>
+              <% catPlaylistsCurrentPage.filter(item => item !== null).forEach(({ id, name: title, description, images, uri, owner }) => { %>
                 <%
                   const text = description || owner?.display_name || "Spotify";
                   const [image] = images || [];

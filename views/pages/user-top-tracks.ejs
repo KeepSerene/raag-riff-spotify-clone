@@ -20,7 +20,7 @@
 
           <div class="list">
             <!-- prettier-ignore -->
-            <% trackItems.forEach(({ id, name, album: { name: albumName, images }, artists, duration_ms, uri: trackUri }, index) => { %>
+            <% trackItems.filter(item => item !== null).forEach(({ id, name, album: { name: albumName, images }, artists, duration_ms, uri: trackUri }, index) => { %>
               <%
                 const text = artists.map(({ name }) => name).join(", ");
                 index = (index + 1) + (limit * (page - 1)); 

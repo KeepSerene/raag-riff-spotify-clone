@@ -3,8 +3,18 @@
   aria-label="Pagination navigation"
   class="pagination-controls"
 >
+  <% 
+    const totalPages = Math.ceil(locals.total / locals.limit);
+    const currentPage = parseInt(locals.page);
+    const isValidPage = currentPage <= totalPages;
+  %>
+  
   <p class="body-medium">
-    Page <%= `${locals.page} of ${Math.ceil(locals.total / locals.limit)}` %>
+    <% if (isValidPage) { %>
+      Page <%= `${currentPage} of ${totalPages}` %>
+    <% } else { %>
+      Page <%= currentPage %> (End of results)
+    <% } %>
   </p>
 
   <div class="controls-wrapper">
@@ -31,3 +41,7 @@
     </a>
   </div>
 </nav>
+
+<p class="body-small pagination-helper-text">
+  Note: Total pages may vary due to Spotify's dynamic content filtering
+</p>

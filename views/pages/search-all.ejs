@@ -1,0 +1,180 @@
+<!-- prettier-ignore -->
+<%
+  const {
+    tracks: {
+      items: trackItems,
+      total: totalTracks  
+    },
+    artists: {
+      items: artistItems,
+      total: totalArtists  
+    },
+    albums: {
+      items: albumItems,
+      total: totalAlbums  
+    },
+    playlists: {
+      items: playlistItems,
+      total: totalPlaylists  
+    }
+  } = locals.allSearchResults;
+%>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../layouts/head.ejs", { title: "Search | RaagRiff" }) %>
+
+    <style media="(width >= 62em)">
+      .list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .list-item .item-content {
+        grid-template-columns: minmax(0, 1fr) 42px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="page custom-scrollbar" data-page>
+      <!-- Topbar -->
+      <%- include("../partials/top-bar.ejs", { ...locals.currentUserProfile,
+      query: locals.query }) %>
+
+      <!-- Search filters -->
+      <%- include("../layouts/search-filters.ejs", { type: locals.type,
+      allSearchResults: locals.allSearchResults }) %>
+
+      <article class="main">
+        <!-- Tracks -->
+        <% if (totalTracks > 0) { %>
+        <section class="section">
+          <div class="title-wrapper section-title">
+            <h2 class="title">Tracks</h2>
+          </div>
+
+          <div class="list">
+            <!-- prettier-ignore -->
+            <% trackItems.filter(item => item !== null).forEach(({ id, name: title, artists, album: { images }, duration_ms, uri: trackUri }) => { %>
+                <% const text = artists.map(({ name }) => name).join(", "); %>
+                <%- include("../partials/list-item.ejs", {
+                  id,
+                  title,
+                  images,
+                  text,
+                  duration_ms,
+                  trackUri
+                }) %>
+            <% }) %>
+          </div>
+        </section>
+        <% } %>
+
+        <!-- Albums -->
+        <% if (totalAlbums > 0) { %>
+        <section class="section">
+          <div class="title-wrapper section-title">
+            <h2 class="title">Albums</h2>
+          </div>
+
+          <div class="slider" data-slider>
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% albumItems.filter(item => item !== null).forEach(({ id, name: title, images, artists, release_date, uri }) => { %>
+                <%
+                    const year = new Date(release_date).getFullYear();
+                    const text = artists.map(({ name }) => name).join(", ");
+                    const image = images.find(img => img.width === 300);
+                %>
+                <%- include("../partials/card.ejs", {
+                    type: "album",
+                    title,
+                    image,
+                    text,
+                    year,
+                    link: `/albums/${id}`,
+                    uri
+                }) %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+        <% } %>
+
+        <!-- Artists -->
+        <% if (totalArtists > 0) { %>
+        <section class="section">
+          <div class="title-wrapper section-title">
+            <h2 class="title">Artists</h2>
+          </div>
+
+          <div class="slider" data-slider>
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% artistItems.filter(item => item !== null).forEach(({ id, type, name: title, images, uri }) => { %>
+                <% const [image] = images || []; %>
+                <%- include("../partials/card.ejs", {
+                    variant: "artist-card",
+                    type: "artist",
+                    title,
+                    image,
+                    text: type,
+                    link: `/artists/${id}`,
+                    uri
+                }) %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+        <% } %>
+
+        <!-- Playlists -->
+        <% if (totalPlaylists > 0) { %>
+        <section class="section">
+          <div class="title-wrapper section-title">
+            <h2 class="title">Playlists</h2>
+          </div>
+
+          <div class="slider" data-slider>
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% playlistItems.filter(item => item !== null).forEach(({ id, name: title, images, owner, uri }) => { %>
+                <% 
+                  const [image] = images || [];
+                  const text = `By ${owner.display_name}`; 
+                %>
+                <%- include("../partials/card.ejs", {
+                    type: "playlist",
+                    title,
+                    image,
+                    text,
+                    link: `/playlists/${id}`,
+                    uri
+                }) %>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+        <% } %>
+      </article>
+
+      <!-- Music player small -->
+      <%- include("../partials/player-sm.ejs") %>
+
+      <!-- Music player large (modal view) -->
+      <%- include("../partials/player-lg.ejs") %>
+
+      <!-- Footer -->
+      <%- include("../layouts/footer.ejs") %>
+
+      <!-- Bottom navigation -->
+      <%- include("../partials/bottom-nav.ejs") %>
+    </main>
+
+    <!-- Recently played tracks sidebar -->
+    <%- include("../layouts/recent-tracks-sidebar.ejs", { recentTracks:
+    locals.recentlyPlayedTracks }) %>
+  </body>
+</html>

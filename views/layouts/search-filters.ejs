@@ -1,0 +1,39 @@
+<!-- prettier-ignore -->
+<%
+  const filters = [
+    {
+        type: "all",
+        label: "All"
+    },
+    {
+        type: "tracks",
+        label: "Tracks"
+    },
+    {
+        type: "albums",
+        label: "Albums"
+    },
+    {
+        type: "artists",
+        label: "Artists"
+    },
+    {
+        type: "playlists",
+        label: "Playlists"
+    },
+  ]; 
+%>
+
+<div class="search-filters" data-list-header>
+  <!-- prettier-ignore -->
+  <% filters.forEach(({ type, label }) => { %>
+    <% if (locals.allSearchResults?.[type]?.total === 0) return; %>
+
+        <%- include("../partials/chip.ejs", {
+            query: locals.query,
+            searchType: locals.type,
+            filterType: type,
+            label
+        }) %>
+    <% }) %>
+</div>

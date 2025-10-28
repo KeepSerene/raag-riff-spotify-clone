@@ -115,7 +115,7 @@ const {
         <!-- Playlist tracks -->
         <div class="list-container">
           <header class="list-header" data-list-header>
-            <div class="sr-no-col body-large">#</div>
+            <div aria-label="Serial number" class="sr-no-col body-large">#</div>
 
             <div class="col body-large">Track</div>
 
@@ -130,7 +130,7 @@ const {
 
           <div class="list">
             <!-- prettier-ignore -->
-            <% playlistTracks.forEach((item, index) => { %>
+            <% playlistTracks.filter(item => item !== null).forEach((item, index) => { %>
               <%
                 const {
                     id,

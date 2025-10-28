@@ -6,7 +6,6 @@
 "use strict";
 
 const axios = require("axios");
-// const querystring = require("querystring");
 const apiConfig = require("./api.config");
 
 const authApi = axios.create({
