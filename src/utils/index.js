@@ -103,10 +103,61 @@ function formatTimestamp(milliseconds) {
   return `${mins}:${pad(secs)}`;
 }
 
+/**
+ * Clean lyrics text by removing HTML, metadata, and Genius-specific content
+ * @param {string} rawLyrics - Raw lyrics text from Genius
+ * @returns {string} Cleaned lyrics text
+ */
+function cleanLyricsText(rawLyrics) {
+  if (!rawLyrics) return "";
+
+  let cleanedLyrics = rawLyrics
+    // Remove HTML tags
+    .replace(/<[^>]*>/g, "")
+    // Remove contributor count (e.g., "211 Contributors")
+    .replace(/^\d+\s+Contributors?/i, "")
+    // Remove translation headers
+    .replace(/Translations[^\n]*/gi, "")
+    // Remove "Lyrics" suffix from title
+    .replace(/^.*?\sLyrics\s*/i, "")
+    // Remove "Read More" links
+    .replace(/…\s*Read More/gi, "")
+    // Remove section markers like [Verse 1], [Chorus], etc.
+    .replace(/\[.*?\]/g, "")
+    // Remove extra whitespace and blank lines
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return cleanedLyrics;
+}
+
+/**
+ * Get partial lyrics (first 50% or 16 lines, whichever is smaller)
+ * @param {string} fullLyrics - Full cleaned lyrics
+ * @returns {Object} Partial lyrics with metadata
+ */
+function getPartialLyrics(fullLyrics) {
+  const lines = fullLyrics.split("\n").filter((line) => line.trim() !== "");
+  const totalLines = lines.length;
+
+  // Calculate 50% of lines, but cap at 16 lines maximum
+  const partialLineCount = Math.min(16, Math.ceil(totalLines * 0.5));
+  const partialLines = lines.slice(0, partialLineCount);
+
+  return {
+    lyrics: partialLines.join("\n"),
+    isPartial: totalLines > partialLineCount,
+    totalLines: totalLines,
+    shownLines: partialLineCount,
+  };
+}
+
 module.exports = {
   generateRandomString,
   calculateOffset,
   shuffleArray,
   getRandomItems,
   formatTimestamp,
+  cleanLyricsText,
+  getPartialLyrics,
 };

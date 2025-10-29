@@ -29,3 +29,23 @@
   );
   backdrop-filter: blur(150px);
 }
+
+.info-body {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Responsiveness for screen sizes >= 992px */
+@media screen and (width >= 62em) {
+  .info-body {
+    grid-template-columns: 1fr 360px;
+    gap: var(--space-6);
+  }
+}
+
+/* Responsiveness for screen sizes >= 1400px */
+@media screen and (width >= 87.5em) {
+  .info-body {
+    grid-template-columns: 1fr 1fr;
+  }
+}

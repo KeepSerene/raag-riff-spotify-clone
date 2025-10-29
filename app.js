@@ -18,6 +18,9 @@ const albumsRouter = require("./src/routes/albums.route");
 const playlistsRouter = require("./src/routes/playlists.route");
 const profileRouter = require("./src/routes/profile.route");
 const searchRouter = require("./src/routes/search.route");
+const artistsRouter = require("./src/routes/artists.route");
+const tracksRouter = require("./src/routes/tracks.route");
+const logoutRouter = require("./src/routes/logout.route");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -48,11 +51,17 @@ app.use(handleUserAuthentication);
 
 // Protected routes (auth required)
 app.use("/api/token", tokenRouter); // access token endpoint for client-side
+app.use("/logout", logoutRouter);
 app.use("/", homeRouter);
 app.use("/explore", exploreRouter);
 app.use("/albums", albumsRouter);
 app.use("/playlists", playlistsRouter);
 app.use("/me", profileRouter);
 app.use("/search", searchRouter);
+app.use("/artists", artistsRouter);
+app.use("/tracks", tracksRouter);
+app.use((req, res) => {
+  res.render("./pages/not-found.ejs");
+});
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

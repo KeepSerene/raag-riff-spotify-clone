@@ -18,13 +18,23 @@ const authApi = axios.create({
   },
 });
 
-const webApi = axios.create({
+const spotifyWebApi = axios.create({
   baseURL: apiConfig.BASE_URL,
 });
 
+/**
+ * Fetches data from a specified API endpoint using Bearer token authentication.
+ * @async
+ * @param {string} apiEndpoint - The API endpoint URL to request data from.
+ * @param {string} access_token - The Bearer token for authorization.
+ * @returns {Promise<Object>} The API response object containing the requested data.
+ * @throws {Error} Throws an error if the API request fails, after logging it to the console.
+ * @example
+ * const response = await getApiResponse('https://api.spotify.com/v1/me', token);
+ */
 async function getApiResponse(apiEndpoint, access_token) {
   try {
-    const response = await webApi.get(apiEndpoint, {
+    const response = await spotifyWebApi.get(apiEndpoint, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },

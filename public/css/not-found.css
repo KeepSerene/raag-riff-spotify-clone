@@ -1,0 +1,88 @@
+@import url("./base.css");
+
+.not-found-page {
+  height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-7);
+}
+
+.not-found-page .title {
+  text-transform: capitalize;
+}
+
+.not-found-page .text {
+  max-width: 24ch;
+  margin-top: var(--space-2);
+  opacity: 0.8;
+}
+
+.btn {
+  --state-layer-bg: var(--on-primary);
+
+  max-width: max-content;
+  min-width: max-content;
+  height: 40px;
+  background-color: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--radius-full);
+  padding-inline: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: box-shadow var(--tr-duration-short-2) var(--tr-easing-linear);
+}
+
+.btn:hover:not(:focus) {
+  box-shadow: var(--shadow-1);
+}
+
+:has(> .state-layer) {
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  user-select: none;
+}
+
+.state-layer {
+  background-color: var(--state-layer-bg);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--tr-duration-short-2) var(--tr-easing-linear);
+}
+
+:has(> .state-layer):hover > .state-layer {
+  opacity: 0.08;
+}
+
+:has(> .state-layer):is(:focus, :focus-visible, :focus-within, :active)
+  > .state-layer {
+  opacity: 0.12;
+}
+
+/* Responsiveness for screen sizes >= 768px */
+@media screen and (width >= 48em) {
+  .not-found-page {
+    gap: var(--space-10);
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .not-found-page .title {
+    font-size: var(--fs-display-large);
+    line-height: var(--lh-display-large);
+    letter-spacing: var(--ls-n-025);
+  }
+
+  .not-found-page .text {
+    max-width: unset;
+    margin-top: var(--space-4);
+  }
+}

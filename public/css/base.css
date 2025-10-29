@@ -607,7 +607,7 @@ input:is(:-webkit-autofill, :autofill):where(:hover, :focus, :active) {
 
 /* Responsiveness for screen sizes >= 768px */
 @media screen and (width >= 48em) {
-  body:not(:has(.login-page)) {
+  body:not(:has(.login-page, .not-found-page)) {
     background-color: var(--surface);
     padding: var(--space-2);
     padding-left: calc(var(--navigation-rail-width) + var(--space-4));

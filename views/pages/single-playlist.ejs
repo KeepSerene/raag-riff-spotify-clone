@@ -1,7 +1,6 @@
 <!-- prettier-ignore -->
 <%
 const { 
-   id,
    type: playlistType,
    name: playlistName,
    description,
@@ -67,22 +66,22 @@ const {
 
               <% if (totalFollowers > 1) { %>
               <p class="label-large">
-                <%- totalFollowers.toLocaleString("en-US") %> Followers
+                <%= totalFollowers.toLocaleString("en-US") %> Followers
               </p>
               <% } else { %>
               <p class="label-large">
-                <%- totalFollowers.toLocaleString("en-US") %> Follower
+                <%= totalFollowers.toLocaleString("en-US") %> Follower
               </p>
               <% } %>
               <span class="separator"></span>
 
               <% if (totalTracks > 1) { %>
               <p class="label-large">
-                <%- totalTracks.toLocaleString("en-US") %> Tracks
+                <%= totalTracks.toLocaleString("en-US") %> Tracks
               </p>
               <% } else { %>
               <p class="label-large">
-                <%- totalTracks.toLocaleString("en-US") %> Track
+                <%= totalTracks.toLocaleString("en-US") %> Track
               </p>
               <% } %>
             </div>
@@ -133,12 +132,12 @@ const {
             <% playlistTracks.filter(item => item !== null).forEach((item, index) => { %>
               <%
                 const {
-                    id,
-                    name: title,
-                    album: { name: albumName, images },
-                    artists,
-                    duration_ms,
-                    uri: trackUri,
+                  id,
+                  name: title,
+                  album: { name: albumName, images },
+                  artists,
+                  duration_ms,
+                  uri: trackUri,
                 } = item.track;
                 const text = artists.map(({ name }) => name).join(", ");
                 index++;

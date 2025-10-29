@@ -239,7 +239,7 @@ async function getCategoryPlaylists(req, itemLimit = apiConfig.LOWER_LIMIT) {
 async function getPlaylistInfo(req) {
   const { playlistId } = req.params;
   const { data: playlistInfo } = await getApiResponse(
-    `/playlists/${playlistId}?fields=id,type,name,images,description,external_urls,owner(display_name),followers(total),uri,tracks(id,name,total,items(track(album(name,images),artists,duration_ms,uri)))`,
+    `/playlists/${playlistId}?fields=id,type,name,images,description,external_urls,owner(display_name),followers(total),uri,tracks(name,total,items(track(id,album(name,images),artists,duration_ms,uri)))`,
     req.cookies.access_token
   );
 

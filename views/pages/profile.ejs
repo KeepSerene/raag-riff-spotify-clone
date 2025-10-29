@@ -71,17 +71,17 @@
             <div class="info-text has-separator">
               <% if (totalProfileFollowers > 1) { %>
               <p class="label-large">
-                <%- totalProfileFollowers.toLocaleString("en-US") %> Followers
+                <%= totalProfileFollowers.toLocaleString("en-US") %> Followers
               </p>
               <% } else { %>
               <p class="label-large">
-                <%- totalProfileFollowers.toLocaleString("en-US") %> Follower
+                <%= totalProfileFollowers.toLocaleString("en-US") %> Follower
               </p>
               <% } %>
               <span class="separator"></span>
 
               <p class="label-large">
-                <%- totalFollowedArtists.toLocaleString("en-US") %> Following
+                <%= totalFollowedArtists.toLocaleString("en-US") %> Following
               </p>
             </div>
           </div>

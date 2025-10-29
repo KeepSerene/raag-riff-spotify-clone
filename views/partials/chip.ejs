@@ -1,5 +1,5 @@
 <a
-  href="/search/<%= locals.filterType %>/<%= locals.query %>"
+  href="/search/<%= locals.filterType %>/<%= encodeURIComponent(locals.query) %>"
   aria-label="Visit '<%= locals.query %>' page"
   class="chip <%= locals.searchType === locals.filterType ? 'active' : '' %>"
   data-search-filter

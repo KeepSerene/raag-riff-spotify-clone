@@ -1,0 +1,278 @@
+<!-- prettier-ignore -->
+<%
+const {
+  name: trackName,
+  album: {
+    name: albumName,
+    images: trackImages,
+    release_date,
+  },
+  duration_ms,
+  external_urls: { spotify: spotifyUrl },
+  uri: trackUri
+} = locals.trackInfo;
+const {
+  width: trackBannerWidth = 300,
+  height: trackBannerHeight = 300,
+  url: trackBannerSrc = "/images/track-banner.png"
+} = trackImages.at(0) ?? {};
+const {
+  found: lyricsFound,
+  lyrics,
+  message
+} = locals.trackLyricsInfo;
+const { artists } = locals.trackArtistsInfo;
+const artistNames = artists.map(({ name }) => name);
+const { tracks: artistTopTracks } = locals.mainArtistTopTracksInfo;
+const { artists: relatedArtists } = locals.mainArtistRelatedArtistsInfo;
+%>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../layouts/head.ejs", { title: `${trackName} —
+    ${artistNames.join(", ")} | RaagRiff` }) %>
+
+    <link rel="stylesheet" href="/css/info-page.css" />
+
+    <style>
+      .page::before {
+        background-image: url("<%= trackBannerSrc %>");
+      }
+
+      .lyrics-title,
+      .lyrics-body {
+        margin-bottom: var(--space-4);
+      }
+
+      .lyrics-title {
+        color: var(--on-surface);
+      }
+
+      .lyrics-body,
+      .lyrics-copyright {
+        color: var(--on-surface-variant);
+      }
+
+      .lyrics-copyright {
+        max-width: 44ch;
+        opacity: 0.8;
+      }
+
+      .artists-list {
+        max-width: 360px;
+      }
+
+      .artist-item .figure-img {
+        border-radius: var(--radius-full);
+      }
+
+      .artist-item:where(:hover, :focus-visible, :focus-within) .figure-img {
+        opacity: 1;
+      }
+
+      .artist-item .item-content {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="page custom-scrollbar" data-page>
+      <!-- Topbar -->
+      <%- include("../partials/top-bar.ejs", locals.currentUserProfile) %>
+
+      <article class="main">
+        <!-- Track info -->
+        <header class="info-header">
+          <figure class="figure-img info-banner">
+            <img
+              src="<%= trackBannerSrc %>"
+              alt="<%= trackName %> banner"
+              width="<%= trackBannerWidth %>"
+              height="<%= trackBannerHeight %>"
+              loading="lazy"
+              class="cover-img"
+              data-lazy-loaded
+            />
+          </figure>
+
+          <div class="info-content">
+            <p class="label-large info-subtitle">Track</p>
+
+            <h2 class="headline-large info-title"><%= trackName %></h2>
+
+            <div class="info-text has-separator">
+              <p class="label-large"><%= artistNames.join(", ") %></p>
+              <span class="separator"></span>
+
+              <p class="label-large"><%= albumName %></p>
+              <span class="separator"></span>
+
+              <p class="label-large">
+                <%= new Date(release_date).getFullYear() %>
+              </p>
+              <span class="separator"></span>
+
+              <p class="label-large"><%= formatTimestamp(duration_ms) %></p>
+            </div>
+
+            <div class="info-actions">
+              <%- include("../partials/play-btn.ejs", { variant: "filled",
+              dataAttr: `data-track-uri=${trackUri}` }) %>
+
+              <a
+                href="<%= spotifyUrl %>"
+                target="_blank"
+                class="btn btn-outline has-icon"
+                data-ripple
+              >
+                <img
+                  src="/images/spotify-primary.svg"
+                  alt="Spotify logo"
+                  width="18"
+                  height="18"
+                />
+                <span class="label-large">Listen on Spotify</span>
+                <div class="state-layer"></div>
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <div class="divider"></div>
+
+        <!-- Track lyrics and artists -->
+        <section class="section <%= lyricsFound ? 'info-body' : '' %>">
+          <% if (lyricsFound) { %>
+          <div>
+            <h2 class="lyrics-title title-large">Lyrics</h2>
+
+            <p class="lyrics-body body-large">
+              <%- lyrics.replace(/\n/g, "<br />") %>
+            </p>
+
+            <p class="lyrics-copyright body-small">
+              Lyrics sourced from Genius (https://genius.com). A partial excerpt
+              is displayed for educational and personal use only.
+            </p>
+          </div>
+          <% } %>
+
+          <div class="list artists-list">
+            <!-- prettier-ignore -->
+            <% artists.filter(artist => artist !== null).forEach(({ id, name, images }) => { %>
+              <%
+                const {
+                  width = 56,
+                  height = 56,
+                  url = "/images/artist-banner.png"
+                } = images.at(0) ?? {};
+              %>
+
+            <div title="<%= name %>" class="list-item artist-item" data-ripple>
+              <div class="item-banner">
+                <figure class="figure-img">
+                  <img
+                    src="<%= url %>"
+                    alt="<%= name %> avatar"
+                    width="<%= width %>"
+                    height="<%= height %>"
+                    loading="lazy"
+                    data-lazy-loaded
+                    class="cover-img"
+                  />
+                </figure>
+              </div>
+
+              <div class="item-content">
+                <p class="body-medium item-text">Artist</p>
+                <p class="body-large item-title"><%= name %></p>
+              </div>
+
+              <a
+                href="/artists/<%= id %>"
+                aria-label="Visit <%= name %>'s page"
+                class="item-link"
+              ></a>
+
+              <div class="state-layer"></div>
+            </div>
+            <% }) %>
+          </div>
+        </section>
+
+        <!-- Main artist top tracks -->
+        <section class="section">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">
+              <!-- prettier-ignore -->
+              <% const [mainArtistName] = artistNames; %>
+              Popular tracks by <%= mainArtistName %>
+            </h2>
+          </div>
+
+          <div class="list">
+            <!-- prettier-ignore -->
+            <% artistTopTracks.filter(track => track !== null).forEach(({ id, name, album: { name: albumName, images }, duration_ms, uri: trackUri }, index) => { %>
+              <% index++; %>
+              <%- include("../partials/list-item.ejs", {
+                id,
+                title: name,
+                albumName,
+                images,
+                trackSrNo: index,
+                trackUri,
+                duration_ms
+              }) %>
+            <% }) %>
+          </div>
+        </section>
+
+        <!-- Main artist related artists -->
+        <% if (relatedArtists.length > 0) { %>
+        <section class="section">
+          <div class="title-wrapper">
+            <h2 class="title-large section-title">Fans also like</h2>
+          </div>
+
+          <div class="slider" data-slider>
+            <div class="slider-inner">
+              <!-- prettier-ignore -->
+              <% relatedArtists.filter(artist => artist !== null).forEach(({ id, name, type, images, uri }) => { %>
+                  <% const [image] = images || []; %>
+                  <%- include("../partials/card.ejs", {
+                    variant: "artist-card",
+                    type: "artist",
+                    title: name,
+                    text: type,
+                    image,
+                    uri,
+                    link: `/artists/${id}`
+                  }) %>  
+              <% }) %>
+            </div>
+          </div>
+        </section>
+        <% } %>
+      </article>
+
+      <!-- Music player small -->
+      <%- include("../partials/player-sm.ejs") %>
+
+      <!-- Music player large (modal view) -->
+      <%- include("../partials/player-lg.ejs") %>
+
+      <!-- Footer -->
+      <%- include("../layouts/footer.ejs") %>
+
+      <!-- Bottom navigation -->
+      <%- include("../partials/bottom-nav.ejs") %>
+    </main>
+
+    <!-- Recently played tracks sidebar -->
+    <%- include("../layouts/recent-tracks-sidebar.ejs", { recentTracks:
+    locals.recentlyPlayedTracks }) %>
+  </body>
+</html>

@@ -5,6 +5,15 @@
   <head>
     <%- include("../layouts/head.ejs", { title: `${locals.title} | RaagRiff` })
     %>
+
+    <!-- prettier-ignore -->
+    <% if (locals.isArtistAlbum) { %>
+    <style>
+      .card .card-text {
+        text-transform: capitalize;
+      }
+    </style>
+    <% } %>
   </head>
 
   <body>
@@ -21,28 +30,28 @@
           <div class="grid-list">
             <!-- prettier-ignore -->
             <% albumItems.filter(item => item !== null).forEach(({ id, name: title, images, album_type, release_date, artists, uri }) => { %>
-                <%
-                    let year, text;
+              <%
+                let year, text;
                     
-                    if (locals.isArtistAlbum) {
-                        year = new Date(release_date).getFullYear();
-                        text = album_type;
-                    } else {
-                        text = artists.map(({ name }) => name).join(", ");
-                    }
+                if (locals.isArtistAlbum) {
+                  year = new Date(release_date).getFullYear();
+                  text = album_type;
+                } else {
+                  text = artists.map(({ name }) => name).join(", ");
+                }
 
-                    const img300x300 = images.find(img => img.width === 300);
-                %>
+                const img300x300 = images.find(img => img.width === 300);
+              %>
 
-                <%- include("../partials/card.ejs", {
-                    type: "album",
-                    title,
-                    text,
-                    year,
-                    image: img300x300,
-                    link: `/albums/${id}`,
-                    uri
-                }) %>
+              <%- include("../partials/card.ejs", {
+                type: "album",
+                title,
+                text,
+                year,
+                image: img300x300,
+                link: `/albums/${id}`,
+                uri
+              }) %>
             <% }) %>
           </div>
 
