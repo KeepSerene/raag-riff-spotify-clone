@@ -2,7 +2,7 @@
 
 A modern, feature-rich Spotify web player for discovering music, exploring albums, artists, and playlists. Browse new releases, search tracks, and stream seamlessly with Spotify Premium. Built with the Spotify Web API and Web Playback SDK.
 
-![RaagRiff Banner](./public/images/raag-riff.png)
+![RaagRiff Banner](./public/images/raag-riff.png "Desktop view of RaagRiff home page")
 
 ## 🌐 Live Demo
 
@@ -329,7 +329,7 @@ Genius API integration with intelligent processing:
 
 ## 🔐 Authentication Flow
 
-1. User clicks "Login with Spotify"
+1. User clicks "Continue with Spotify"
 2. Redirected to Spotify authorization page
 3. User grants permissions
 4. Spotify redirects to callback with authorization code
