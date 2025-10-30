@@ -15,6 +15,7 @@ import {
   // skipToNext,
 } from "./client-player-api.js";
 import { addEventListenersToElems, formatTimestamp } from "../utils.js";
+import { showPremiumRequiredToast } from "../toast.js";
 
 const $players = document.querySelectorAll("[data-player]");
 
@@ -291,8 +292,10 @@ window.onSpotifyWebPlaybackSDKReady = async () => {
     console.error("Authentication Error:", message);
   });
 
+  // PREMIUM ACCOUNT ERROR HANDLER
   player.addListener("account_error", ({ message }) => {
     console.error("Account Error:", message);
+    showPremiumRequiredToast();
   });
 
   // Connect to the player
