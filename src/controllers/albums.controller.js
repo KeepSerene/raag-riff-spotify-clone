@@ -14,13 +14,16 @@ const { formatTimestamp } = require("../utils");
 
 async function handleAlbums(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [currentUserProfile, recentlyPlayedTracksInfo, newReleases] =
+      await Promise.all([
+        userApi.fetchProfile(req),
+        playerApi.getRecentlyPlayedTracksInfo(req),
+        newReleasesApi.getNewReleasesWithPagination(req),
+      ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const newReleases = await newReleasesApi.getNewReleasesWithPagination(req);
 
     res.render("./pages/albums.ejs", {
       title: "New Releases",
@@ -51,13 +54,17 @@ async function handleAlbums(req, res) {
 
 async function handleSingleAlbum(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [currentUserProfile, recentlyPlayedTracksInfo, albumInfo] =
+      await Promise.all([
+        userApi.fetchProfile(req),
+        playerApi.getRecentlyPlayedTracksInfo(req),
+        newReleasesApi.getAlbumInfo(req),
+      ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const albumInfo = await newReleasesApi.getAlbumInfo(req);
+
     const [firstArtist] = albumInfo.artists;
     const moreAlbumsByArtist = await artistsApi.getArtistAlbums(
       req,

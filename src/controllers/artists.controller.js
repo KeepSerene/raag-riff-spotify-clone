@@ -13,19 +13,25 @@ const { formatTimestamp } = require("../utils");
 
 async function handleSingleArtist(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [
+      currentUserProfile,
+      recentlyPlayedTracksInfo,
+      artistAlbumsInfo,
+      artistInfo,
+      artistTopTracksInfo,
+      relatedArtistsInfo,
+    ] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+      artistsApi.getArtistAlbums(req, apiConfig.LOWER_LIMIT),
+      artistsApi.getArtistInfo(req),
+      artistsApi.getArtistTopTracks(req),
+      artistsApi.getRelatedArtists(req),
+    ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const artistAlbumsInfo = await artistsApi.getArtistAlbums(
-      req,
-      apiConfig.LOWER_LIMIT
-    );
-    const artistInfo = await artistsApi.getArtistInfo(req);
-    const artistTopTracksInfo = await artistsApi.getArtistTopTracks(req);
-    const relatedArtistsInfo = await artistsApi.getRelatedArtists(req);
 
     res.render("./pages/single-artist.ejs", {
       currentUserProfile,
@@ -59,14 +65,21 @@ async function handleSingleArtist(req, res) {
 
 async function handleSingleArtistAlbums(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [
+      currentUserProfile,
+      recentlyPlayedTracksInfo,
+      artistAlbumsInfo,
+      artistInfo,
+    ] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+      artistsApi.getArtistAlbums(req),
+      artistsApi.getArtistInfo(req),
+    ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const artistAlbumsInfo = await artistsApi.getArtistAlbums(req);
-    const artistInfo = await artistsApi.getArtistInfo(req);
 
     res.render("./pages/albums.ejs", {
       title: artistInfo.name,

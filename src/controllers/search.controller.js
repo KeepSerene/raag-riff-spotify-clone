@@ -17,13 +17,16 @@ function handleSearchRequest(req, res) {
 
 async function handleSearchAll(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [currentUserProfile, recentlyPlayedTracksInfo, allSearchResults] =
+      await Promise.all([
+        userApi.fetchProfile(req),
+        playerApi.getRecentlyPlayedTracksInfo(req),
+        searchApi.fetchAllResults(req),
+      ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const allSearchResults = await searchApi.fetchAllResults(req);
 
     res.render("./pages/search-all.ejs", {
       type: "all",
@@ -56,13 +59,19 @@ async function handleSearchAll(req, res) {
 
 async function handleSearchAlbums(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [
+      currentUserProfile,
+      recentlyPlayedTracksInfo,
+      albumSearchResultsInfo,
+    ] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+      searchApi.fetchAlbums(req),
+    ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const albumSearchResultsInfo = await searchApi.fetchAlbums(req);
 
     res.render("./pages/search-albums.ejs", {
       type: "albums",
@@ -94,13 +103,19 @@ async function handleSearchAlbums(req, res) {
 
 async function handleSearchArtists(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [
+      currentUserProfile,
+      recentlyPlayedTracksInfo,
+      artistSearchResultsInfo,
+    ] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+      searchApi.fetchArtists(req),
+    ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const artistSearchResultsInfo = await searchApi.fetchArtists(req);
 
     res.render("./pages/search-artists.ejs", {
       type: "artists",
@@ -132,13 +147,19 @@ async function handleSearchArtists(req, res) {
 
 async function handleSearchPlaylists(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [
+      currentUserProfile,
+      recentlyPlayedTracksInfo,
+      playlistSearchResultsInfo,
+    ] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+      searchApi.fetchPlaylists(req),
+    ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const playlistSearchResultsInfo = await searchApi.fetchPlaylists(req);
 
     res.render("./pages/search-playlists.ejs", {
       type: "playlists",
@@ -170,13 +191,19 @@ async function handleSearchPlaylists(req, res) {
 
 async function handleSearchTracks(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [
+      currentUserProfile,
+      recentlyPlayedTracksInfo,
+      trackSearchResultsInfo,
+    ] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+      searchApi.fetchTracks(req, 50),
+    ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const trackSearchResultsInfo = await searchApi.fetchTracks(req, 50);
 
     res.render("./pages/search-tracks.ejs", {
       type: "tracks",

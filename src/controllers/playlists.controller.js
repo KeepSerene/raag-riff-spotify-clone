@@ -12,13 +12,19 @@ const { formatTimestamp } = require("../utils");
 
 async function handlePlaylists(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [
+      currentUserProfile,
+      recentlyPlayedTracksInfo,
+      featuredPlaylistsInfo,
+    ] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+      playlistsApi.getFeaturedPlaylists(req),
+    ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const featuredPlaylistsInfo = await playlistsApi.getFeaturedPlaylists(req);
 
     res.render("./pages/playlists.ejs", {
       currentUserProfile,
@@ -48,13 +54,16 @@ async function handlePlaylists(req, res) {
 
 async function handleSinglePlaylist(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [currentUserProfile, recentlyPlayedTracksInfo, playlistInfo] =
+      await Promise.all([
+        userApi.fetchProfile(req),
+        playerApi.getRecentlyPlayedTracksInfo(req),
+        playlistsApi.getPlaylistInfo(req),
+      ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const playlistInfo = await playlistsApi.getPlaylistInfo(req);
 
     res.render("./pages/single-playlist.ejs", {
       currentUserProfile,

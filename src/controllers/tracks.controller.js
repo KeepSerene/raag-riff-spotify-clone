@@ -13,32 +13,32 @@ const { formatTimestamp } = require("../utils");
 
 async function handleSingleTrack(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [currentUserProfile, recentlyPlayedTracksInfo, trackInfo] =
+      await Promise.all([
+        userApi.fetchProfile(req),
+        playerApi.getRecentlyPlayedTracksInfo(req),
+        tracksApi.getTrackInfo(req),
+      ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const trackInfo = await tracksApi.getTrackInfo(req);
+
     const trackArtistIds = trackInfo.artists.map(({ id }) => id);
-    const trackArtistsInfo = await artistsApi.getSeveralArtistsInfo(
-      req,
-      trackArtistIds.join(",")
-    );
     const [mainArtistId] = trackArtistIds;
-    const mainArtistTopTracksInfo = await artistsApi.getArtistTopTracks(
-      req,
-      mainArtistId
-    );
-    const mainArtistRelatedArtistsInfo = await artistsApi.getRelatedArtists(
-      req,
-      mainArtistId
-    );
     const { name, artists } = trackInfo;
-    const trackLyricsInfo = await tracksApi.getTrackLyrics(
-      name,
-      artists.at(0).name
-    );
+
+    const [
+      trackArtistsInfo,
+      mainArtistTopTracksInfo,
+      mainArtistRelatedArtistsInfo,
+      trackLyricsInfo,
+    ] = await Promise.all([
+      artistsApi.getSeveralArtistsInfo(req, trackArtistIds.join(",")),
+      artistsApi.getArtistTopTracks(req, mainArtistId),
+      artistsApi.getRelatedArtists(req, mainArtistId),
+      tracksApi.getTrackLyrics(name, artists.at(0).name),
+    ]);
 
     res.render("./pages/single-track.ejs", {
       currentUserProfile,

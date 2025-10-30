@@ -12,18 +12,23 @@ const { formatTimestamp } = require("../utils");
 
 async function handleProfile(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [
+      currentUserProfile,
+      recentlyPlayedTracksInfo,
+      userTopArtists,
+      userTopTracks,
+      userFollowedArtists,
+    ] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+      userApi.getTopArtists(req),
+      userApi.getTopTracks(req, apiConfig.LOWER_LIMIT / 2),
+      userApi.getFollowedArtists(req),
+    ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const userTopArtists = await userApi.getTopArtists(req);
-    const userTopTracks = await userApi.getTopTracks(
-      req,
-      apiConfig.LOWER_LIMIT / 2
-    );
-    const userFollowedArtists = await userApi.getFollowedArtists(req);
 
     res.render("./pages/profile.ejs", {
       currentUserProfile,
@@ -56,15 +61,15 @@ async function handleProfile(req, res) {
 
 async function handleTopArtists(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [currentUserProfile, recentlyPlayedTracksInfo, userTopArtists] =
+      await Promise.all([
+        userApi.fetchProfile(req),
+        playerApi.getRecentlyPlayedTracksInfo(req),
+        userApi.getTopArtists(req, apiConfig.DEFAULT_LIMIT),
+      ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
-    );
-    const userTopArtists = await userApi.getTopArtists(
-      req,
-      apiConfig.DEFAULT_LIMIT
     );
 
     res.render("./pages/user-top-artists.ejs", {
@@ -96,13 +101,16 @@ async function handleTopArtists(req, res) {
 
 async function handleTopTracks(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [currentUserProfile, recentlyPlayedTracksInfo, userTopTracks] =
+      await Promise.all([
+        userApi.fetchProfile(req),
+        playerApi.getRecentlyPlayedTracksInfo(req),
+        userApi.getTopTracks(req, 50),
+      ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const userTopTracks = await userApi.getTopTracks(req, 50); // 50 is generally the Spotify Web API max limit
 
     res.render("./pages/user-top-tracks.ejs", {
       title: "Your Top Tracks",

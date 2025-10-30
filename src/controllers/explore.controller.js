@@ -13,13 +13,16 @@ const apiConfig = require("../configs/api.config");
 
 async function handleExplore(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [currentUserProfile, recentlyPlayedTracksInfo, categories] =
+      await Promise.all([
+        userApi.fetchProfile(req),
+        playerApi.getRecentlyPlayedTracksInfo(req),
+        categoriesApi.getSeveralBrowseCategories(req),
+      ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const categories = await categoriesApi.getSeveralBrowseCategories(req);
 
     res.render("./pages/explore.ejs", {
       currentUserProfile,
@@ -50,16 +53,20 @@ async function handleExplore(req, res) {
 
 async function handleExploreSingleCat(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [
+      currentUserProfile,
+      recentlyPlayedTracksInfo,
+      catDetails,
+      catPlaylistsInfo,
+    ] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+      categoriesApi.getSingleBrowseCategory(req),
+      playlistsApi.getCategoryPlaylists(req, apiConfig.DEFAULT_LIMIT),
+    ]);
+
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
-    );
-    const catDetails = await categoriesApi.getSingleBrowseCategory(req);
-    const catPlaylistsInfo = await playlistsApi.getCategoryPlaylists(
-      req,
-      apiConfig.DEFAULT_LIMIT
     );
 
     res.render("./pages/explore-single-cat.ejs", {

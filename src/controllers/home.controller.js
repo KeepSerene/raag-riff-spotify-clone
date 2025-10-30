@@ -14,13 +14,25 @@ const playlistsApi = require("../api/playlists.api");
 
 async function handleHome(req, res) {
   try {
-    const currentUserProfile = await userApi.fetchProfile(req);
-    const recentlyPlayedTracksInfo =
-      await playerApi.getRecentlyPlayedTracksInfo(req);
+    const [currentUserProfile, recentlyPlayedTracksInfo] = await Promise.all([
+      userApi.fetchProfile(req),
+      playerApi.getRecentlyPlayedTracksInfo(req),
+    ]);
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
       ({ track }) => track
     );
-    const recommendedAlbumsInfo = await albumsApi.getRecommendedAlbums(req);
+    const [
+      recommendedAlbumsInfo,
+      newReleases,
+      featuredPlaylistsInfo,
+      categoryPlaylistsInfo,
+    ] = await Promise.all([
+      albumsApi.getRecommendedAlbums(req),
+      newReleasesApi.getNewReleasesWithPagination(req),
+      playlistsApi.getFeaturedPlaylists(req),
+      playlistsApi.getCategoryPlaylists(req),
+    ]);
+
     const recommendedAlbums = recommendedAlbumsInfo.items || [];
 
     // Fetch artist info from recommended albums
@@ -42,10 +54,6 @@ async function handleHome(req, res) {
         );
       }
     }
-
-    const newReleases = await newReleasesApi.getNewReleasesWithPagination(req);
-    const featuredPlaylistsInfo = await playlistsApi.getFeaturedPlaylists(req);
-    const categoryPlaylistsInfo = await playlistsApi.getCategoryPlaylists(req);
 
     res.render("./pages/home.ejs", {
       currentUserProfile,

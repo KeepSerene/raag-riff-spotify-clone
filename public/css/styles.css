@@ -752,6 +752,7 @@
   }
 
   .bottom-nav .logo {
+    width: max-content;
     height: 72px;
     padding-bottom: var(--space-2);
   }
