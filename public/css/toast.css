@@ -39,7 +39,7 @@
 }
 
 .toast .toast-icon {
-  color: var(--error);
+  color: var(--on-error);
   flex-shrink: 0;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .toast .toast-action {
-  color: var(--primary);
+  color: var(--on-primary);
   font-size: var(--fs-label-large);
   font-weight: var(--fw-medium);
   line-height: var(--lh-label-large);

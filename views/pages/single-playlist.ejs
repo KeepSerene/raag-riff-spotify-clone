@@ -129,7 +129,26 @@ const {
 
           <div class="list">
             <!-- prettier-ignore -->
-            <% playlistTracks.filter(item => item !== null).forEach((item, index) => { %>
+            <%
+              const playableTracks = playlistTracks.filter(item => {
+                const t = item.track;
+
+                if (!t) return false;
+
+                // reject metadata shells: no name, no album name, no artist names, no duration, no images
+                const noName = !t.name || t.name.trim() === "";
+                const noAlbum = !t.album || !t.album.name || t.album.name.trim() === "";
+                const noArtists = !t.artists || !t.artists.length || t.artists.every(a => !a.name || a.name.trim() === "");
+                const noDuration = !t.duration_ms || t.duration_ms === 0;
+                const noImage = !t.album.images || !t.album.images.length;
+
+                if (noName && noAlbum && noArtists && noDuration && noImage) return false;
+
+                return true;
+              });
+            %>
+            <!-- prettier-ignore -->
+            <% playableTracks.filter(item => item !== null).forEach((item, index) => { %>
               <%
                 const {
                   id,

@@ -20,7 +20,7 @@ const LOWER_LIMIT = 12;
 const DEFAULT_LIMIT = 28;
 
 // Genius API (for lyrics) configs
-// Get Genius client access token from - https://genius.com/api-clients
+// Get Genius client access token from https://genius.com/api-clients
 const GENIUS_CLIENT_ACCESS_TOKEN = process.env.GENIUS_CLIENT_ACCESS_TOKEN;
 const GeniusClient = new Genius.Client(GENIUS_CLIENT_ACCESS_TOKEN);
 

@@ -5,6 +5,8 @@
 
 "use strict";
 
+import { showToast } from "../toast.js";
+
 const BASE_URL = "https://api.spotify.com/v1";
 
 /**
@@ -85,9 +87,50 @@ async function play(deviceId, reqBody) {
       }
     );
 
+    if (response.status === 403) {
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage =
+        errorData?.error?.message || "Content not available!";
+
+      if (
+        errorMessage.includes("Restriction violated") ||
+        errorMessage.includes("Premium")
+      ) {
+        showToast({
+          message:
+            "This content is not available in your region or requires Premium!",
+          icon: "block",
+          action: "",
+        });
+      } else {
+        showToast({
+          message: "Content not available!",
+          icon: "error",
+          action: "",
+        });
+      }
+
+      return;
+    }
+
+    if (!response.ok) {
+      console.error("Playback error:", response.status, response.statusText);
+      showToast({
+        message: "Unable to play this track",
+        icon: "error",
+        action: "",
+      });
+      return;
+    }
+
     return response;
   } catch (error) {
     console.error("Error playing track:", error);
+    showToast({
+      message: "Failed to play track",
+      icon: "error",
+      action: "",
+    });
   }
 }
 

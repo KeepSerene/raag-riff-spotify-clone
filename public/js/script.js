@@ -159,7 +159,7 @@ $playerModalTogglers &&
   addEventListenersToElems($playerModalTogglers, "click", togglePlayerModal);
 
 /**
- * Session history back and forward navigation
+ * Session history back and forward navigations
  */
 const historyBackBtn = document.querySelector("[data-history-back-btn]");
 const historyForwardBtn = document.querySelector("[data-history-forward-btn]");
