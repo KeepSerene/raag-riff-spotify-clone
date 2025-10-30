@@ -1,3 +1,3 @@
 # RaagRiff
 
-This is a music streaming/playlists web app (a Spotify clone)! Work in progress...
+RaagRiff — A modern Spotify web player for discovering music, exploring albums, artists, and playlists. Browse new releases, search tracks, and stream seamlessly with Spotify Premium. Built with the Spotify Web API and Web Playback SDK.

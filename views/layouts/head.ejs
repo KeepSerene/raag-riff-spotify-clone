@@ -1,11 +1,46 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Primary Meta Tags -->
 <meta name="title" content="<%= locals.title %>" />
 <meta name="author" content="Dhrubajyoti Bhattacharjee" />
 <meta
   name="description"
-  content="RaagRiff: discover, create, and share curated playlists — a lightweight web player that delivers personalized music and seamless in-browser playback. Sign in with Spotify to enable secure streaming via the Spotify Web API and Web Playback SDK."
+  content="RaagRiff - A modern Spotify web player for discovering music, exploring albums, artists, and playlists. Browse new releases, search tracks, and stream seamlessly with Spotify Premium. Built with the Spotify Web API and Web Playback SDK."
 />
+<meta
+  name="keywords"
+  content="Spotify web player, music streaming, albums, playlists, artists, new releases, music discovery, Spotify API, music app, online music player"
+/>
+<meta name="theme-color" content="#12E29A" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://raagriff.com/" />
+<meta property="og:title" content="<%= locals.title %>" />
+<meta
+  property="og:description"
+  content="Discover and stream music with RaagRiff - a modern Spotify web player. Explore albums, artists, playlists, and new releases with seamless playback."
+/>
+<meta property="og:image" content="/images/raag-riff.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="RaagRiff" />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content="https://raagriff.com/" />
+<meta name="twitter:title" content="<%= locals.title %>" />
+<meta
+  name="twitter:description"
+  content="Discover and stream music with RaagRiff - a modern Spotify web player. Explore albums, artists, playlists, and new releases."
+/>
+<meta name="twitter:image" content="/images/raag-riff.png" />
+<meta name="twitter:creator" content="@UsualLearner" />
+
+<!-- Canonical URL -->
+<link rel="canonical" href="https://raagriff.com/" />
 
 <!-- Favicon -->
 <link
@@ -14,11 +49,19 @@
   type="image/svg+xml"
   sizes="any"
 />
+
 <!-- Material symbols rounded (static icon font) -->
 <link
   rel="stylesheet"
   href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0..200"
 />
+
+<!-- Preconnect to external domains -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://sdk.scdn.co" />
+<link rel="preconnect" href="https://api.spotify.com" />
+
 <!-- Custom CSS -->
 <link rel="stylesheet" href="/css/styles.css" />
 <link rel="stylesheet" href="/css/toast.css" />
