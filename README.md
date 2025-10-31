@@ -6,7 +6,7 @@ A modern, feature-rich Spotify web player for discovering music, exploring album
 
 ## 🌐 Live Demo
 
-**[Launch RaagRiff](https://raag-riff.onrender.com)** · _Hosted on Render_
+**[Launch RaagRiff](https://raag-riff.onrender.com)** · _Hosted on [Render](https://render.com/)_
 
 > **Note:** You need a Spotify Premium account to use the playback features.
 
@@ -121,12 +121,12 @@ A modern, feature-rich Spotify web player for discovering music, exploring album
    Create a `.env` file in the root directory:
 
    ```env
-   PORT=5000
-   SPOTIFY_DEV_CLIENT_ID=your_spotify_client_id
-   SPOTIFY_DEV_CLIENT_SECRET=your_spotify_client_secret
-   SPOTIFY_DEV_REDIRECT_URI=http://127.0.0.1:5000/auth/callback
-   SPOTIFY_DEV_SCOPES=user-read-playback-state user-modify-playback-state user-read-currently-playing streaming user-follow-read user-top-read user-read-recently-played user-read-email user-read-private
-   GENIUS_CLIENT_ACCESS_TOKEN=your_genius_access_token
+   PORT="5000"
+   SPOTIFY_DEV_CLIENT_ID="your_spotify_client_id"
+   SPOTIFY_DEV_CLIENT_SECRET="your_spotify_client_secret"
+   SPOTIFY_DEV_REDIRECT_URI="http://127.0.0.1:5000/auth/callback"
+   SPOTIFY_DEV_SCOPES="user-read-playback-state user-modify-playback-state user-read-currently-playing streaming user-follow-read user-top-read user-read-recently-played user-read-email user-read-private"
+   GENIUS_CLIENT_ACCESS_TOKEN="your_genius_client_access_token"
    ```
 
 4. **Configure Spotify App**
@@ -160,7 +160,7 @@ The application will be available at `http://127.0.0.1:5000`
 
 ---
 
-## 📂 Project Structure (Overview, sort of. Tentative!)
+## 📂 Project Structure (Tentative!)
 
 ```
 raag-riff/
