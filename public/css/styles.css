@@ -445,6 +445,7 @@
   height: 4px;
   background-color: var(--on-surface-variant);
   opacity: 0.4;
+  cursor: grab;
 }
 
 .player-lg .track-info {

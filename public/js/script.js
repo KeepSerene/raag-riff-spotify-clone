@@ -159,6 +159,83 @@ $playerModalTogglers &&
   addEventListenersToElems($playerModalTogglers, "click", togglePlayerModal);
 
 /**
+ * DRAG-TO-CLOSE FUNCTIONALITY FOR PLAYER MODAL (MOBILE ONLY)
+ * Allows users to swipe down on the handle to close the player modal
+ * Similar to bottom sheets in mobile apps (Spotify, Apple Music, etc.)
+ */
+const $playerDragHandleWrapper = document.querySelector(
+  "[data-drag-handle-wrapper]"
+);
+
+if ($playerModal && $playerDragHandleWrapper) {
+  // track drag state and positions
+  let isDragging = false;
+  let startY = 0;
+  let currentY = 0;
+  let dragThreshold = 100; // min drag distance (in pixels) to trigger close
+
+  // start tracking the drag when user touches/clicks the handle
+  $playerDragHandleWrapper.addEventListener("pointerdown", (event) => {
+    isDragging = true;
+    startY = event.clientY;
+    currentY = startY;
+
+    // remove transition temporarily for smooth dragging
+    $playerModal.style.transition = "none";
+  });
+
+  // track the drag movement
+  document.addEventListener("pointermove", (event) => {
+    if (!isDragging) return;
+
+    currentY = event.clientY;
+    const deltaY = currentY - startY;
+
+    // only allow dragging downwards (positive deltaY)
+    // prevents dragging up, which would look weird!
+    if (deltaY > 0) {
+      // applying the drag distance as a transform to move the modal down
+      // using transform for better performance than changing 'top' or 'bottom'
+      $playerModal.style.transform = `translateY(calc(-100% + ${deltaY}px))`;
+    }
+  });
+
+  // Handle drag end - decide whether to close or snap back
+  document.addEventListener("pointerup", () => {
+    if (!isDragging) return;
+
+    isDragging = false;
+    const deltaY = currentY - startY;
+
+    // Restore the transition for smooth snap animation
+    $playerModal.style.transition = "";
+
+    // dragged down more than threshold - close the modal
+    if (deltaY > dragThreshold) {
+      togglePlayerModal();
+
+      // reset transform after modal closes
+      setTimeout(() => {
+        $playerModal.style.transform = "";
+      }, 300); // waiting for close animation to complete
+    } else {
+      // too small drag - snap back to original position
+      $playerModal.style.transform = "translateY(-100%)";
+    }
+  });
+
+  // handle case where pointer leaves the screen during drag
+  document.addEventListener("pointerleave", () => {
+    if (!isDragging) return;
+
+    isDragging = false;
+    // restore transition and snap back to original position
+    $playerModal.style.transition = "";
+    $playerModal.style.transform = "translateY(-100%)";
+  });
+}
+
+/**
  * Session history back and forward navigations
  */
 const historyBackBtn = document.querySelector("[data-history-back-btn]");
