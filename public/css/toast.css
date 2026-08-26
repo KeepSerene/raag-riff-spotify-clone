@@ -1,10 +1,11 @@
 @import url("./base.css");
 
 .toast-container {
+  margin-inline: 1rem;
   position: fixed;
   bottom: calc(var(--bottom-nav-height) + var(--player-sm-height) + 16px);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
   z-index: 10;
   pointer-events: none;
 }
@@ -64,10 +65,10 @@
 /* Responsiveness for screen sizes >= 768px */
 @media screen and (width >= 48em) {
   .toast-container {
+    margin-inline: 0;
     bottom: calc(var(--player-lg-height) + 16px);
     left: auto;
     right: 16px;
-    transform: none;
   }
 }
 
