@@ -15,7 +15,7 @@ const utils = require("../utils");
 const { getSpotifyTokens } = require("../api/auth.api");
 
 // initiates the authorization request
-function handleAuth(req, res) {
+function handleAuth(_req, res) {
   const state = utils.generateRandomString(16);
   res.cookie(apiConfig.AUTH_STATE_KEY, state);
   res.redirect(
@@ -26,7 +26,7 @@ function handleAuth(req, res) {
         scope: apiConfig.SCOPES, // what permissions one needs
         redirect_uri: apiConfig.REDIRECT_URI,
         state, // anti-CSRF token
-      })
+      }),
   );
 }
 
@@ -39,12 +39,14 @@ async function handleCallback(req, res) {
 
   if (error) {
     console.error("Spotify auth error:", error);
-    return res.redirect("/login");
+
+    return res.redirect("/login?error=access_denied");
   }
 
   if (!state || state !== storedState) {
     console.error("State mismatch or missing state");
-    return res.redirect("/login");
+
+    return res.redirect("/login?error=invalid_state");
   }
 
   // clearing the state cookie
@@ -74,11 +76,13 @@ async function handleCallback(req, res) {
       return res.redirect("/");
     } else {
       console.error("Token exchange failed with status:", response.status);
-      return res.redirect("/login");
+
+      return res.redirect("/login?error=token_exchange_failed");
     }
   } catch (error) {
     console.error("Token exchange error:", error.message);
-    return res.redirect("/login");
+
+    return res.redirect("/login?error=token_exchange_failed");
   }
 }
 

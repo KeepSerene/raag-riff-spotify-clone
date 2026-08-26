@@ -130,7 +130,6 @@ A modern, feature-rich Spotify web player for discovering music, exploring album
    ```
 
 4. **Configure Spotify App**
-
    - Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
    - Create a new app
    - Add `http://127.0.0.1:5000/auth/callback` to Redirect URIs
@@ -222,11 +221,8 @@ The application uses a dark theme based on Material Design 3 principles:
 Based on 4px grid system with CSS custom properties:
 
 ```css
---space-1: 4px
---space-2: 8px
---space-3: 12px
---space-4: 16px
-/* ... up to --space-20 */
+--space-1: 4px --space-2: 8px --space-3: 12px --space-4: 16px
+  /* ... up to --space-20 */;
 ```
 
 ### Responsive Breakpoints
@@ -337,6 +333,7 @@ Genius API integration with intelligent processing:
 6. Tokens stored in HTTP-only cookies
 7. Middleware validates tokens on protected routes
 8. Automatic token refresh when expired
+9. If OAuth fails at any step (state mismatch, denied access, failed token exchange) or the initial data fetch fails after login (e.g. a 403 from a Premium-gated endpoint), the user is redirected to `/login?error=<code>`, and a toast on the login page explains what went wrong
 
 ---
 
@@ -371,6 +368,12 @@ Genius API integration with intelligent processing:
   - Audio may cut out after approximately 30 seconds
   - These issues are related to the Spotify Web Playback SDK and browser compatibility
   - **Workaround**: Use Chrome, Edge, or other Chromium-based browsers for the best experience
+
+### Spotify Developer Mode Restrictions (added Feb 2026)
+
+Spotify now requires the account that owns the app's Client ID (i.e. the developer's own account, not the visiting user's) to hold an **active Premium subscription** for player-related endpoints — recently played tracks, playback control, etc. — to work at all while the app is in Development Mode. Development Mode is also capped at a small number of allow-listed test users; wider public access requires applying for Spotify's Extended Quota Mode.
+
+If the owner's Premium lapses, any authenticated visitor will be bounced back to `/login` with an on-page toast explaining that Premium is currently required — this is expected behavior given the restriction above, not an app bug.
 
 ### Future Improvements
 

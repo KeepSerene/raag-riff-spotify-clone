@@ -86,10 +86,13 @@ export function hideToast(toast) {
 
 /**
  * Show Spotify Premium required toast
+ * @param {string} [message] - Optional custom message. Defaults to the playback-specific message.
  */
-export function showPremiumRequiredToast() {
+export function showPremiumRequiredToast(
+  message = "Spotify Premium required to play music",
+) {
   return showToast({
-    message: "Spotify Premium required to play music",
+    message,
     icon: "error",
     action: "Get Premium",
     link: "https://www.spotify.com/premium/",

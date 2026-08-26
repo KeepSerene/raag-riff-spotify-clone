@@ -60,6 +60,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/login.css" />
+    <link rel="stylesheet" href="/css/toast.css" />
 
     <title>Login | RaagRiff</title>
   </head>
@@ -135,5 +136,46 @@
         </p>
       </div>
     </main>
+
+    <script type="module">
+      import { showToast, showPremiumRequiredToast } from "/js/toast.js";
+
+      const ERROR_MESSAGES = {
+        access_denied:
+          "You'll need to authorize access with Spotify to continue.",
+        invalid_state:
+          "Your login attempt couldn't be verified. Please try signing in again.",
+        token_exchange_failed:
+          "Couldn't complete sign-in with Spotify. Please try again.",
+        session_expired: "Your session has expired. Please sign in again.",
+        fetch_failed:
+          "Something went wrong while loading your data. Please try again.",
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const errorCode = params.get("error");
+
+      if (errorCode) {
+        if (errorCode === "premium_required") {
+          showPremiumRequiredToast(
+            "Spotify Premium is currently required to use this app. Please check back later.",
+          );
+        } else {
+          showToast({
+            message:
+              ERROR_MESSAGES[errorCode] ||
+              "Something went wrong. Please try again.",
+            action: "", // no action link for these generic errors
+          });
+        }
+
+        // strip ?error=... so refreshing the page doesn't re-fire the toast
+        params.delete("error");
+        const cleanUrl =
+          window.location.pathname +
+          (params.toString() ? `?${params.toString()}` : "");
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    </script>
   </body>
 </html>

@@ -19,7 +19,7 @@ async function handleHome(req, res) {
       playerApi.getRecentlyPlayedTracksInfo(req),
     ]);
     const recentlyPlayedTracks = recentlyPlayedTracksInfo.items.map(
-      ({ track }) => track
+      ({ track }) => track,
     );
     const [
       recommendedAlbumsInfo,
@@ -50,7 +50,7 @@ async function handleHome(req, res) {
       if (stringifiedUniqueIds) {
         recommendedArtistsInfo = await artistsApi.getSeveralArtistsInfo(
           req,
-          stringifiedUniqueIds
+          stringifiedUniqueIds,
         );
       }
     }
@@ -69,16 +69,22 @@ async function handleHome(req, res) {
 
     if (error.response && error.response.status === 401) {
       res.clearCookie("access_token");
+
       return res.redirect(
         `/auth/refresh_tokens?redirect_to=${encodeURIComponent(
-          req.originalUrl
-        )}`
+          req.originalUrl,
+        )}`,
       );
     }
 
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
-    return res.redirect("/login");
+
+    if (error.response && error.response.status === 403) {
+      return res.redirect("/login?error=premium_required");
+    }
+
+    return res.redirect("/login?error=fetch_failed");
   }
 }
 

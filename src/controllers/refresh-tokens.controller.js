@@ -12,9 +12,8 @@ async function handleTokensRefresh(req, res) {
   const { refresh_token } = req.cookies;
   const redirectTo = req.query.redirect_to || "/"; // see user-auth.middleware.js
 
-  // If no refresh token, redirect to login
   if (!refresh_token) {
-    return res.redirect("/login");
+    return res.redirect("/login?error=session_expired");
   }
 
   try {
@@ -47,13 +46,15 @@ async function handleTokensRefresh(req, res) {
       return res.redirect(decodeURIComponent(redirectTo));
     } else {
       console.log("Token refresh failed with status:", response.status);
-      return res.redirect("/login");
+
+      return res.redirect("/login?error=session_expired");
     }
   } catch (error) {
     console.error("Token refresh error:", error.message);
     // If refresh fails, the refresh token might be expired/invalid
     res.clearCookie("refresh_token");
-    return res.redirect("/login");
+
+    return res.redirect("/login?error=session_expired");
   }
 }
 
